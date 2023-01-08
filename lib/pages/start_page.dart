@@ -5,9 +5,22 @@ class StartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.lightBlue,
       body: Center(
-        child: Text('Bath.random'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Bath.random',
+              style: TextStyle(
+                fontSize: 40,
+                //fontFamily: ,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
