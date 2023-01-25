@@ -14,7 +14,7 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 83, 221, 251),
+      backgroundColor: Color(0xFF80E1EE),
       body: Center(
         child: Container(
           child: Column(

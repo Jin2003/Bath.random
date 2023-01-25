@@ -15,9 +15,11 @@ class CustomButton extends StatelessWidget {
     return OutlinedButton(
       child: Text(title),
       style: OutlinedButton.styleFrom(
-        primary: Colors.black,
-        shape: const StadiumBorder(),
-        side: const BorderSide(color: Colors.green),
+        primary: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        side: const BorderSide(color: Colors.black),
       ),
       onPressed: () {
         Navigator.push(

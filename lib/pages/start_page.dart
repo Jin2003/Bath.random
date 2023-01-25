@@ -7,17 +7,17 @@ class StartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 83, 221, 251),
+      backgroundColor: Color(0xFF80E1EE),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Bath.random();',
-              style: GoogleFonts.montserratAlternates(
+              "Bath.random();",
+              style: GoogleFonts.orbitron(
                 textStyle: TextStyle(
                   fontSize: 35,
-                  fontWeight: FontWeight.bold,
+                  //fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
               ),

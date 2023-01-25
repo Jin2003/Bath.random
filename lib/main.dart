@@ -22,10 +22,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Bath.random',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.lightBlue,
       ),
       //home: const StartPage(),
-      home: const GroupSelectPage(),
+      home: const StartPage(),
     );
   }
 }
