@@ -1,7 +1,12 @@
+import 'package:bath_random/pages/group_select_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'components/custom_button.dart';
+import 'package:bath_random/pages/qr_display_page.dart';
 
 class GroupCreatePage extends StatefulWidget {
+  const GroupCreatePage({super.key});
+
   @override
   State<GroupCreatePage> createState() => _GroupCreatePageState();
 }
@@ -14,18 +19,50 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF80E1EE),
+      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
-        child: Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('家族の人数'),
-              DropdownButton<String>(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(width: 100, height: 70),
+            Text('家族の人数',
+                style: GoogleFonts.mPlusRounded1c(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25,
+                )),
+            const SizedBox(width: 100, height: 10),
+            Container(
+              width: 220,
+              height: 60,
+              decoration: BoxDecoration(
+                //border: Border.all(color: Colors.black),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: DropdownButton<String>(
+                // ignore: prefer_const_constructors
+                // focusColor: Colors.white,
+                // underline: Container(
+                //   height: 3,
+                //   color: Colors.black,
+                // ),
+                iconSize: 40,
+                style: const TextStyle(
+                  fontSize: 28,
+                  //フォント変えたい！！！！！！！！！！！！！！！！！！！！！！
+                  color: Colors.black,
+                ),
                 value: selectedValue,
                 items: lists
-                    .map((String list) =>
-                        DropdownMenuItem(value: list, child: Text(list)))
+                    .map((String list) => DropdownMenuItem(
+                          // ignore: sort_child_properties_last
+                          child: Container(
+                            width: 100,
+                            alignment: Alignment.center,
+                            child: Text(list),
+                          ),
+                          value: list,
+                        ))
                     .toList(),
                 onChanged: (String? value) {
                   setState(() {
@@ -33,40 +70,12 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                   });
                 },
               ),
-              OutlinedButton(
-                child: const Text('登録'),
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.black,
-                  shape: const StadiumBorder(),
-                  side: const BorderSide(color: Colors.green),
-                ),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => GroupJoinPage(),
-                  //   ),
-                  // );
-                },
-              ),
-              OutlinedButton(
-                child: const Text('もどる'),
-                style: OutlinedButton.styleFrom(
-                  primary: Colors.black,
-                  shape: const StadiumBorder(),
-                  side: const BorderSide(color: Colors.green),
-                ),
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(
-                  //     builder: (context) => GroupJoinPage(),
-                  //   ),
-                  // );
-                },
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(width: 100, height: 30),
+            const CustomButton(title: '登録', nextPage: QrDisplayPage()),
+            const SizedBox(width: 100, height: 10),
+            const CustomButton(title: 'もどる', nextPage: GroupSelectPage()),
+          ],
         ),
       ),
     );
