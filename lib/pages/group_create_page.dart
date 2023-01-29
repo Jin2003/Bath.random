@@ -1,23 +1,35 @@
 import 'package:bath_random/pages/group_select_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'components/custom_button.dart';
 import 'package:bath_random/pages/qr_display_page.dart';
 
 class GroupCreatePage extends StatefulWidget {
-  const GroupCreatePage({super.key});
+  final String? deleteGroupId;
+  const GroupCreatePage({super.key, this.deleteGroupId});
 
   @override
   State<GroupCreatePage> createState() => _GroupCreatePageState();
 }
 
 class _GroupCreatePageState extends State<GroupCreatePage> {
-  var selectedValue = "4";
+  String selectedValue = "4";
 
   final lists = <String>["2", "3", "4", "5", "6"];
 
+  // firestoreからgroupを消去する処理
+  Future<void> deleteGroup(String? groupID) async {
+    final doc = FirebaseFirestore.instance.collection('group').doc(groupID);
+    await doc.delete();
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (widget.deleteGroupId != null) {
+      deleteGroup(widget.deleteGroupId);
+    }
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
@@ -66,13 +78,18 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                     .toList(),
                 onChanged: (String? value) {
                   setState(() {
+                    // 入力した数を渡す
                     selectedValue = value!;
                   });
                 },
               ),
             ),
             const SizedBox(width: 100, height: 30),
-            const CustomButton(title: '登録', nextPage: QrDisplayPage()),
+            CustomButton(
+                title: '登録',
+                nextPage: QrDisplayPage(
+                  userCounts: selectedValue,
+                )),
             const SizedBox(width: 100, height: 10),
             const CustomButton(title: 'もどる', nextPage: GroupSelectPage()),
           ],
