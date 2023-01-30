@@ -2,8 +2,6 @@ import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
 import 'package:bath_random/pages/regi_comp_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import 'package:bath_random/pages/regi_comp_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,7 +18,6 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
   static late String groupID; // 新規作成するグループのID
   final groupCollection = FirebaseFirestore.instance.collection('group');
   final userCollection = FirebaseFirestore.instance.collection('user');
-  bool isAllResistered = false; // 全員登録したかどうか
 
   // groupを作成してfirestoreに登録する処理
   Future<void> createGroup() async {
@@ -36,6 +33,16 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
   Widget build(BuildContext context) {
     createGroup(); // groupを作成
 
+    ButtonStyle nextButtonStyle = OutlinedButton.styleFrom(
+      foregroundColor: Colors.black,
+      backgroundColor: const Color.fromARGB(255, 255, 249, 249),
+      fixedSize: const Size(210, 70),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      side: const BorderSide(),
+    );
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
@@ -46,25 +53,15 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               child: SizedBox(
                 width: 250,
                 height: 250,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RegiCompPage(
-                            groupID: groupID,
-                          ),
-                        ));
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    elevation: 0,
+                child: Container(
+                  width: 250,
+                  height: 250,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Text('ここにQR'),
+                  child: Text('ここにQR\n$groupID'),
                 ),
               ),
             ),
@@ -85,32 +82,14 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 100,
               height: 20,
             ),
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-                fixedSize: const Size(210, 70),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                side: const BorderSide(),
-              ),
-              onPressed: !isAllResistered
-                  ? null
-                  : () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RegiCompPage(
-                              groupID: groupID,
-                            ),
-                          ));
-                    },
+            Container(
               child: StreamBuilder<QuerySnapshot>(
                 stream: userCollection
                     .where('groupID', isEqualTo: groupID)
                     .snapshots(),
                 builder: (context, snapshot) {
+                  List<Widget> children;
+
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   }
@@ -119,33 +98,47 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                   }
 
                   final docs = snapshot.data!.docs;
-
-                  // debug
-                  if (kDebugMode) {
-                    for (int i = 0; i < docs.length; i++) {
-                      var doc = docs[i];
-                      print("debug:[groupID]" +
-                          doc['groupID'] +
-                          " [userName]" +
-                          doc['userName']);
-                    }
-                  }
-                  /*
-                  groupIDが一致するuserの数が、userCountsに達したら'すすむ'ボタン
-                  グレーアウト -> 押せるようになる + resistation_complete_page(groupID)
-                  */
                   var userCounts = int.parse(widget.userCounts);
+
+                  // 登録したユーザの数がuserCounts(入力した値)に達したら'すすむ'
                   if (userCounts - 1 == docs.length) {
-                    isAllResistered = true;
-                    return const Text('すすむ');
+                    children = <Widget>[
+                      OutlinedButton(
+                        style: nextButtonStyle,
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    RegiCompPage(groupID: groupID),
+                              ));
+                        },
+                        child: const Text('すすむ'),
+                      ),
+                    ];
+                  } else if (userCounts - 1 > docs.length) {
+                    children = <Widget>[
+                      OutlinedButton(
+                        style: nextButtonStyle,
+                        onPressed: null,
+                        child: Text("人数分の登録完了まで\nしばらくお待ちください",
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.mPlusRounded1c(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            )),
+                      )
+                    ];
+                  } else {
+                    children = <Widget>[
+                      const Text('人数が間違えています'),
+                    ];
                   }
 
-                  return Text("人数分の登録完了まで\nしばらくお待ちください",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.mPlusRounded1c(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ));
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: children,
+                  );
                 },
               ),
             ),

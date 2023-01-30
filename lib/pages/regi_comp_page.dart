@@ -3,8 +3,6 @@ import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:google_fonts/google_fonts.dart';
-
 class RegiCompPage extends StatefulWidget {
   final String groupID;
   const RegiCompPage({super.key, required this.groupID});
