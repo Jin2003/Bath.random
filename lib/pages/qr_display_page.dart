@@ -1,5 +1,6 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
+import 'package:bath_random/pages/regi_comp_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -20,20 +21,27 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Container(
-              // ここにQR!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-              width: 250,
-              height: 250,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                "ここにQR",
-                style: GoogleFonts.mPlusRounded1c(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
+            Center(
+              child: SizedBox(
+                width: 250,
+                height: 250,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegiCompPage(),
+                        ));
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text('ここにQR'),
                 ),
               ),
             ),

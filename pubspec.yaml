@@ -29,17 +29,24 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  firebase_core: ^2.4.1
   flutter:
     sdk: flutter
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  firebase_core: ^2.4.1
-  cloud_firestore: ^4.3.1
   google_fonts: ^3.0.1
-  provider: ^5.0.0
+
+# Qr_reader/2023/01/26/------------------
+camera: ^0.9.4+19 #デバイス上のカメラを操作するためのツール
+path_provider: ^2.0.9 #画像の保存場所を見つけ出してくれる
+path: ^1.8.0 #画像の保存場所を作成してくれる
+
+
+# The following adds the Cupertino Icons font to your application.
+# Use with the CupertinoIcons class for iOS style icons.
+cupertino_icons: ^1.0.2
+firebase_core: ^2.4.1
+cloud_firestore: ^4.3.1
+google_fonts: ^3.0.1
+provider: ^5.0.0
 
 dev_dependencies:
   flutter_test:

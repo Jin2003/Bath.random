@@ -13,6 +13,15 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Bath.random();'),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.dehaze_rounded),
+          ),
+        ],
+      ),
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: const Center(
         child: Text('グループ参加'),
