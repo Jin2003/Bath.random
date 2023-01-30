@@ -1,6 +1,5 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
-import 'package:bath_random/pages/regi_comp_page.dart';
 import 'package:bath_random/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -33,16 +32,6 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
   @override
   Widget build(BuildContext context) {
     createGroup(); // groupを作成
-
-    ButtonStyle nextButtonStyle = OutlinedButton.styleFrom(
-      foregroundColor: Colors.black,
-      backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-      fixedSize: const Size(210, 70),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      side: const BorderSide(),
-    );
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
@@ -109,7 +98,6 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                       height: 45,
                       nextPage: WaitPage(
                         groupID: groupID,
-                        userCounts: userCounts,
                       ),
                     ),
                   ];

@@ -1,14 +1,12 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/main_page.dart';
-import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WaitPage extends StatefulWidget {
   final String groupID;
-  final int userCounts;
-  const WaitPage({super.key, required this.groupID, required this.userCounts});
+  const WaitPage({super.key, required this.groupID});
 
   @override
   State<WaitPage> createState() => _WaitPageState();
@@ -17,8 +15,20 @@ class WaitPage extends StatefulWidget {
 class _WaitPageState extends State<WaitPage> {
   final userCollection = FirebaseFirestore.instance.collection('user');
 
+  // groupIDからグループの登録人数(予定)を取り出す処理
+  Future<int> fetchCounts() async {
+    final groupCollection = await FirebaseFirestore.instance
+        .collection('group')
+        .doc(widget.groupID)
+        .get();
+    var data = groupCollection.data();
+    return data!['userCounts'];
+  }
+
   @override
   Widget build(BuildContext context) {
+    int userCounts = fetchCounts() as int;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
@@ -51,7 +61,7 @@ class _WaitPageState extends State<WaitPage> {
                 /*
                   全員の登録が完了したらボタンを押せるようになる
                 */
-                if (widget.userCounts == docs.length) {
+                if (userCounts == docs.length) {
                   // 登録された人数が、入力したuserCountsに達したとき
                   children = <Widget>[
                     const CustomButton(
@@ -61,7 +71,7 @@ class _WaitPageState extends State<WaitPage> {
                       nextPage: MainPage(),
                     ),
                   ];
-                } else if (widget.userCounts > docs.length) {
+                } else if (userCounts > docs.length) {
                   children = <Widget>[
                     const CustomButton(
                       title: "人数分の登録完了まで\nしばらくお待ちください",

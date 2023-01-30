@@ -1,5 +1,6 @@
 import 'package:bath_random/pages/components/custom_button.dart';
-import 'package:bath_random/pages/main_page.dart';
+import 'package:bath_random/pages/wait_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +16,18 @@ String nameText = '';
 
 class _RegiAccountPageState extends State<RegiAccountPage> {
   get child => null;
+  TextEditingController userNameController = TextEditingController();
+  TextEditingController bathTimeController = TextEditingController();
+
+  // ユーザー登録の処理
+  Future<void> createUser() async {
+    final userCollection = FirebaseFirestore.instance.collection('user');
+    userCollection.add({
+      'groupID': widget.groupID,
+      'userName': userNameController.text,
+      'bathTime': bathTimeController.value,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +93,11 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 width: 100,
                 height: 40,
               ),
-              const CustomButton(
+              CustomButton(
                 title: '次へ',
                 width: 120,
                 height: 45,
-                nextPage: MainPage(),
+                nextPage: WaitPage(groupID: widget.groupID),
               )
             ],
           ),
