@@ -1,12 +1,13 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
+import 'package:bath_random/pages/regi_comp_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class QrDisplayPage extends StatefulWidget {
-  final String userCounts;
+  final String userCounts; // ユーザーの登録人数
 
   const QrDisplayPage({super.key, required this.userCounts});
 
@@ -18,6 +19,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
   static late String groupID; // 新規作成するグループのID
   final groupCollection = FirebaseFirestore.instance.collection('group');
   final userCollection = FirebaseFirestore.instance.collection('user');
+  bool isAllResistered = false; // 全員登録したかどうか
 
   // groupを作成してfirestoreに登録する処理
   Future<void> createGroup() async {
@@ -25,13 +27,13 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
     groupCollection.doc(groupID).set({
       'groupID': groupID,
       'userCounts': int.parse(widget.userCounts),
-      'isOrderDecided': false,
+      'isOrderFixed': false,
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    createGroup();
+    createGroup(); // groupを作成
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
@@ -73,14 +75,27 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 100,
               height: 20,
             ),
-            Container(
-              width: 210,
-              height: 70,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+            OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color.fromARGB(255, 255, 249, 249),
+                fixedSize: const Size(210, 70),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                side: const BorderSide(),
               ),
+              onPressed: !isAllResistered
+                  ? null
+                  : () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RegiCompPage(
+                              groupID: groupID,
+                            ),
+                          ));
+                    },
               child: StreamBuilder<QuerySnapshot>(
                 stream: userCollection
                     .where('groupID', isEqualTo: groupID)
@@ -106,11 +121,12 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                     }
                   }
                   /*
-                  TODO: groupIDが一致するuserの数が、userCountsに達したら'すすむ'ボタン
+                  groupIDが一致するuserの数が、userCountsに達したら'すすむ'ボタン
                   グレーアウト -> 押せるようになる + resistation_complete_page(groupID)
                   */
                   var userCounts = int.parse(widget.userCounts);
                   if (userCounts - 1 == docs.length) {
+                    isAllResistered = true;
                     return const Text('すすむ');
                   }
 

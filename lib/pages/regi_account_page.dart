@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
 class RegiAccountPage extends StatefulWidget {
-  const RegiAccountPage({super.key});
+  final String groupID;
+  const RegiAccountPage({super.key, required this.groupID});
 
   @override
   State<RegiAccountPage> createState() => _RegiAccountPageState();
