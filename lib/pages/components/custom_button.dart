@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({Key? key, required this.title, required this.nextPage})
-      : super(key: key);
+  const CustomButton({
+    Key? key,
+    required this.title,
+    required this.nextPage,
+    this.onPressed,
+  }) : super(key: key);
 
   final String title;
   final Widget nextPage;
+  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +34,9 @@ class CustomButton extends StatelessWidget {
         side: const BorderSide(),
       ),
       onPressed: () {
+        if (onPressed != null) {
+          onPressed!();
+        }
         Navigator.push(
           context,
           MaterialPageRoute(
