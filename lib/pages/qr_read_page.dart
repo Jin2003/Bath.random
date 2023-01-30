@@ -23,7 +23,12 @@ class _QrReadPageState extends State<QrReadPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           // ignore: prefer_const_literals_to_create_immutables
           children: [
-            const CustomButton(title: 'カメラ起動', nextPage: RegiAccountPage()),
+            // TODO
+            const CustomButton(
+                title: 'カメラ起動',
+                nextPage: RegiAccountPage(
+                  groupID: "test",
+                )),
             const SizedBox(
               width: 100,
               height: 20,

@@ -51,7 +51,9 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const RegiCompPage(),
+                          builder: (context) => RegiCompPage(
+                            groupID: groupID,
+                          ),
                         ));
                   },
                   style: ElevatedButton.styleFrom(

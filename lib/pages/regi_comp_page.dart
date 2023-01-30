@@ -30,7 +30,11 @@ class _RegiCompPageState extends State<RegiCompPage> {
               ),
             ),
             const SizedBox(width: 100, height: 20),
-            const CustomButton(title: '次へ', nextPage: RegiAccountPage())
+            CustomButton(
+                title: '次へ',
+                nextPage: RegiAccountPage(
+                  groupID: widget.groupID,
+                ))
           ],
         ),
       ),
