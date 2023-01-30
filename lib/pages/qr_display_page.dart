@@ -1,6 +1,7 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
 import 'package:bath_random/pages/regi_comp_page.dart';
+import 'package:bath_random/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -15,7 +16,7 @@ class QrDisplayPage extends StatefulWidget {
 }
 
 class _QrDisplayPageState extends State<QrDisplayPage> {
-  static late String groupID; // 新規作成するグループのID
+  late String groupID; // 新規作成するグループのID
   final groupCollection = FirebaseFirestore.instance.collection('group');
   final userCollection = FirebaseFirestore.instance.collection('user');
 
@@ -82,65 +83,62 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 100,
               height: 20,
             ),
-            Container(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: userCollection
-                    .where('groupID', isEqualTo: groupID)
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  List<Widget> children;
+            StreamBuilder<QuerySnapshot>(
+              stream: userCollection
+                  .where('groupID', isEqualTo: groupID)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                List<Widget> children;
 
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
-                  }
-                  if (!snapshot.hasData) {
-                    return const Text('データがありません');
-                  }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (!snapshot.hasData) {
+                  return const Text('データがありません');
+                }
 
-                  final docs = snapshot.data!.docs;
-                  var userCounts = int.parse(widget.userCounts);
+                final docs = snapshot.data!.docs;
+                var userCounts = int.parse(widget.userCounts);
 
-                  // 登録したユーザの数がuserCounts(入力した値)に達したら'すすむ'
-                  if (userCounts - 1 == docs.length) {
-                    children = <Widget>[
-                      OutlinedButton(
-                        style: nextButtonStyle,
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    RegiCompPage(groupID: groupID),
-                              ));
-                        },
-                        child: const Text('すすむ'),
+                // 登録したユーザの数がuserCounts(入力した値)に達したら'すすむ'
+                if (userCounts - 1 == docs.length) {
+                  children = <Widget>[
+                    CustomButton(
+                      title: "すすむ",
+                      width: 120,
+                      height: 45,
+                      nextPage: WaitPage(
+                        groupID: groupID,
+                        userCounts: userCounts,
                       ),
-                    ];
-                  } else if (userCounts - 1 > docs.length) {
-                    children = <Widget>[
-                      OutlinedButton(
-                        style: nextButtonStyle,
-                        onPressed: null,
-                        child: Text("人数分の登録完了まで\nしばらくお待ちください",
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.mPlusRounded1c(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            )),
-                      )
-                    ];
-                  } else {
-                    children = <Widget>[
-                      const Text('人数が間違えています'),
-                    ];
-                  }
+                    ),
+                  ];
+                } else if (userCounts - 1 > docs.length) {
+                  // 登録したユーザの数が足りないとき
+                  children = <Widget>[
+                    const CustomButton(
+                      title: "人数分の登録完了まで\nしばらくお待ちください",
+                      width: 280,
+                      height: 70,
+                    ),
+                  ];
+                } else {
+                  // TODO: 登録したユーザの数が多すぎるとき
+                  children = <Widget>[
+                    const CustomButton(
+                      title: "登録した人数が間違えています",
+                      width: 120,
+                      height: 45,
+                      onPressed: null,
+                    ),
+                  ];
+                }
 
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: children,
-                  );
-                },
-              ),
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: children,
+                );
+              },
             ),
             const SizedBox(
               width: 100,
@@ -148,6 +146,8 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
             ),
             CustomButton(
               title: 'もどる',
+              width: 120,
+              height: 45,
               nextPage: GroupCreatePage(deleteGroupId: groupID),
             )
           ],

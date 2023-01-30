@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
+  final String title;
+  final double width;
+  final double height;
+  final Widget? nextPage;
+  final Function? onPressed;
+
   const CustomButton({
     Key? key,
     required this.title,
-    required this.nextPage,
+    required this.width,
+    required this.height,
+    this.nextPage,
     this.onPressed,
   }) : super(key: key);
-
-  final String title;
-  final Widget nextPage;
-  final Function? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +31,7 @@ class CustomButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-        fixedSize: const Size(120, 45),
+        fixedSize: Size(width, height),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -37,12 +41,15 @@ class CustomButton extends StatelessWidget {
         if (onPressed != null) {
           onPressed!();
         }
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => nextPage,
-          ),
-        );
+
+        if (nextPage != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => nextPage!,
+            ),
+          );
+        }
       },
     );
 

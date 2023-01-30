@@ -80,7 +80,12 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 width: 100,
                 height: 40,
               ),
-              const CustomButton(title: '次へ', nextPage: MainPage())
+              const CustomButton(
+                title: '次へ',
+                width: 120,
+                height: 45,
+                nextPage: MainPage(),
+              )
             ],
           ),
         ),

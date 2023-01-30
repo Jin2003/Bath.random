@@ -26,6 +26,8 @@ class _QrReadPageState extends State<QrReadPage> {
             // TODO
             const CustomButton(
                 title: 'カメラ起動',
+                width: 120,
+                height: 45,
                 nextPage: RegiAccountPage(
                   groupID: "test",
                 )),
@@ -33,7 +35,12 @@ class _QrReadPageState extends State<QrReadPage> {
               width: 100,
               height: 20,
             ),
-            const CustomButton(title: 'もどる', nextPage: GroupSelectPage()),
+            const CustomButton(
+              title: 'もどる',
+              width: 120,
+              height: 45,
+              nextPage: GroupSelectPage(),
+            ),
           ],
         ),
       ),

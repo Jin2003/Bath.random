@@ -87,11 +87,18 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
             const SizedBox(width: 100, height: 30),
             CustomButton(
                 title: '登録',
+                width: 120,
+                height: 45,
                 nextPage: QrDisplayPage(
                   userCounts: selectedValue,
                 )),
             const SizedBox(width: 100, height: 10),
-            const CustomButton(title: 'もどる', nextPage: GroupSelectPage()),
+            const CustomButton(
+              title: 'もどる',
+              width: 120,
+              height: 45,
+              nextPage: GroupSelectPage(),
+            ),
           ],
         ),
       ),
