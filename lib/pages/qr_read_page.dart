@@ -21,9 +21,7 @@ class _QrReadPageState extends State<QrReadPage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          // ignore: prefer_const_literals_to_create_immutables
           children: [
-            // TODO
             const CustomButton(
                 title: 'カメラ起動',
                 width: 120,

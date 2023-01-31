@@ -8,6 +8,8 @@ class GroupSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String groupID;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(

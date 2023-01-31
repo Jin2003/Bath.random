@@ -34,6 +34,8 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^3.0.1
+  qr_flutter: ^4.0.0 #QRコードの生成
+  qr_code_scanner: ^1.0.1 #QRコードの読み取り
 
 # Qr_reader/2023/01/26/------------------
 camera: ^0.9.4+19 #デバイス上のカメラを操作するためのツール

@@ -4,6 +4,7 @@ import 'package:bath_random/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class QrDisplayPage extends StatefulWidget {
   final String userCounts; // ユーザーの登録人数
@@ -51,7 +52,11 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Text('ここにQR\n$groupID'),
+                  child: QrImage(
+                    data: groupID,
+                    version: QrVersions.auto,
+                    size: 200.0,
+                  ),
                 ),
               ),
             ),
