@@ -52,7 +52,6 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: DropdownButton<String>(
-                // ignore: prefer_const_constructors
                 // focusColor: Colors.white,
                 // underline: Container(
                 //   height: 3,

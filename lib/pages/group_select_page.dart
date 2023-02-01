@@ -8,8 +8,6 @@ class GroupSelectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String groupID;
-
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
@@ -43,6 +41,7 @@ class GroupSelectPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 50),
+            // TODO:
             OutlinedButton(
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.black,
@@ -69,7 +68,6 @@ class GroupSelectPage extends StatelessWidget {
                 ),
               ),
             ),
-            //CustomButton(title: 'title', nextPage: QrReadPage())
           ],
         ),
       ),

@@ -142,7 +142,9 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 120,
               height: 45,
               nextPage: GroupCreatePage(deleteGroupId: groupID),
-            )
+            ),
+            // debug
+            Text(groupID),
           ],
         ),
       ),

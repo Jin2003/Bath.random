@@ -2,6 +2,7 @@ import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegiAccountPage extends StatefulWidget {
@@ -31,7 +32,6 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: prefer_const_constructors
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
       body: Center(
@@ -50,7 +50,9 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 width: 100,
                 height: 10,
               ),
+              // ユーザーネームの入力ボックス
               TextField(
+                controller: userNameController,
                 decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -58,9 +60,6 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                       color: Colors.white,
                     )),
                     labelText: 'your nickname'),
-                onChanged: (name) {
-                  nameText = name;
-                },
               ),
               const SizedBox(
                 width: 100,
@@ -77,7 +76,12 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 width: 100,
                 height: 10,
               ),
+              // お風呂時間の入力ボックス
               TextField(
+                // 入力する値を数字のみに限定
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                controller: bathTimeController,
                 decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                         borderSide: BorderSide(
@@ -85,9 +89,6 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                       color: Colors.white,
                     )),
                     labelText: 'bath time'),
-                onChanged: (name) {
-                  nameText = name;
-                },
               ),
               const SizedBox(
                 width: 100,
