@@ -58,7 +58,7 @@ class _QrReadPageState extends State<QrReadPage> {
     }
   }
 
-  // QRコードを読み取る枠の部分
+  // TODO: QRコードを読み取る枠の部分
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
@@ -94,61 +94,43 @@ class _QrReadPageState extends State<QrReadPage> {
               child: _buildQrView(context),
             ),
             Expanded(
-                flex: 1,
-                child: Container(
-                  // fit: BoxFit.contain,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      if (result != null)
-                        // debug
-                        // Text(
-                        // 'Barcode Type: ${describeEnum(result!.format)}   Data: ${result?.code}'
-                        // )
-                        CustomButton(
-                          title: "登録画面へ",
-                          width: 120,
-                          height: 45,
-                          nextPage: RegiAccountPage(groupID: result!.code!),
-                        )
-                      else
-                        const Text('QR'),
-                      const SizedBox(
-                        width: 120,
-                        height: 20,
-                      ),
-                      const CustomButton(
-                        title: 'もどる',
+              flex: 1,
+              child: Container(
+                // fit: BoxFit.contain,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    if (result != null)
+                      // debug
+                      // Text(
+                      // 'Barcode Type: ${describeEnum(result!.format)}   Data: ${result?.code}'
+                      // )
+                      CustomButton(
+                        title: "登録画面へ",
                         width: 120,
                         height: 45,
-                        nextPage: GroupSelectPage(),
-                      ),
-                      const SizedBox(
-                        width: 120,
-                        height: 20,
-                      ),
-                    ],
-                  ),
-                ))
-
-            // const CustomButton(
-            //   title: 'QRコードを読み取る',
-            //   width: 200,
-            //   height: 45,
-            //   nextPage: RegiAccountPage(
-            //     groupID: "test",
-            //   ),
-            // ),
-            // const SizedBox(
-            //   width: 100,
-            //   height: 20,
-            // ),
-            // const CustomButton(
-            //   title: 'もどる',
-            //   width: 120,
-            //   height: 45,
-            //   nextPage: GroupSelectPage(),
-            // ),
+                        nextPage: RegiAccountPage(groupID: result!.code!),
+                      )
+                    else
+                      const Text('QR'),
+                    const SizedBox(
+                      width: 120,
+                      height: 20,
+                    ),
+                    const CustomButton(
+                      title: 'もどる',
+                      width: 120,
+                      height: 45,
+                      nextPage: GroupSelectPage(),
+                    ),
+                    const SizedBox(
+                      width: 120,
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -16,7 +16,7 @@ class RegiAccountPage extends StatefulWidget {
 String nameText = '';
 
 class _RegiAccountPageState extends State<RegiAccountPage> {
-  get child => null;
+  // get child => null;
   TextEditingController userNameController = TextEditingController();
   TextEditingController bathTimeController = TextEditingController();
 
@@ -26,7 +26,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
     userCollection.add({
       'groupID': widget.groupID,
       'userName': userNameController.text,
-      'bathTime': bathTimeController.value,
+      'bathTime': int.parse(bathTimeController.text),
     });
   }
 
@@ -40,7 +40,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //入力欄
+              // 入力欄
               Text('あなたのニックネーム',
                   style: GoogleFonts.mPlusRounded1c(
                     fontWeight: FontWeight.bold,
@@ -98,6 +98,10 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 title: '次へ',
                 width: 120,
                 height: 45,
+                onPressed: () {
+                  createUser();
+                  print('createUser');
+                },
                 nextPage: WaitPage(groupID: widget.groupID),
               )
             ],

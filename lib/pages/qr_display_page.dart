@@ -1,6 +1,6 @@
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
-import 'package:bath_random/pages/wait_page.dart';
+import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +16,9 @@ class QrDisplayPage extends StatefulWidget {
 }
 
 class _QrDisplayPageState extends State<QrDisplayPage> {
-  late String groupID; // 新規作成するグループのID
+  // 新規作成するグループのID
+  late String groupID;
+  // Firestoreのコレクションを定義
   final groupCollection = FirebaseFirestore.instance.collection('group');
   final userCollection = FirebaseFirestore.instance.collection('user');
 
@@ -32,7 +34,8 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
 
   @override
   Widget build(BuildContext context) {
-    createGroup(); // groupを作成
+    // groupを作成
+    createGroup();
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
@@ -77,6 +80,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 100,
               height: 20,
             ),
+            // ユーザーが登録した人数を検知してウィジェットを表示
             StreamBuilder<QuerySnapshot>(
               stream: userCollection
                   .where('groupID', isEqualTo: groupID)
@@ -101,7 +105,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                       title: "すすむ",
                       width: 120,
                       height: 45,
-                      nextPage: WaitPage(
+                      nextPage: RegiAccountPage(
                         groupID: groupID,
                       ),
                     ),
@@ -116,7 +120,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                     ),
                   ];
                 } else {
-                  // TODO: 登録したユーザの数が多すぎるとき
+                  // 登録したユーザの数が多すぎるとき
                   children = <Widget>[
                     const CustomButton(
                       title: "登録した人数が間違えています",
@@ -143,8 +147,9 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               height: 45,
               nextPage: GroupCreatePage(deleteGroupId: groupID),
             ),
-            // debug
+            // TODO: debug
             Text(groupID),
+            Text(widget.userCounts),
           ],
         ),
       ),

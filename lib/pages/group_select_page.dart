@@ -1,7 +1,7 @@
+import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
 import 'package:bath_random/pages/qr_read_page.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class GroupSelectPage extends StatelessWidget {
   const GroupSelectPage({super.key});
@@ -13,60 +13,21 @@ class GroupSelectPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-                fixedSize: const Size(210, 60),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                side: const BorderSide(),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GroupCreatePage(),
-                  ),
-                );
-              },
-              child: Text(
-                'グループを作る',
-                style: GoogleFonts.mPlusRounded1c(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
+          children: const <Widget>[
+            // groupを作る側が押すボタン
+            CustomButton(
+              title: "グループを作る",
+              width: 120,
+              height: 45,
+              nextPage: GroupCreatePage(),
             ),
-            const SizedBox(height: 50),
-            // TODO:
-            OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black,
-                backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-                fixedSize: const Size(210, 60),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                side: const BorderSide(),
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const QrReadPage(),
-                  ),
-                );
-              },
-              child: Text(
-                'グループに参加する',
-                style: GoogleFonts.mPlusRounded1c(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
+            SizedBox(height: 50),
+            // user側が押すボタン
+            CustomButton(
+              width: 120,
+              height: 45,
+              title: "グループに参加する",
+              nextPage: QrReadPage(),
             ),
           ],
         ),
