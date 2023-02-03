@@ -58,7 +58,7 @@ class _QrReadPageState extends State<QrReadPage> {
     }
   }
 
-  // TODO: QRコードを読み取る枠の部分
+  // TODO: QRコードを読み取る枠の部分のデザイン
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||

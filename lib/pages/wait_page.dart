@@ -1,12 +1,17 @@
 import 'package:bath_random/pages/components/custom_button.dart';
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:bath_random/pages/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class WaitPage extends StatefulWidget {
   final String groupID;
-  const WaitPage({super.key, required this.groupID});
+  const WaitPage({
+    super.key,
+    required this.groupID,
+  });
 
   @override
   State<WaitPage> createState() => _WaitPageState();
@@ -15,15 +20,6 @@ class WaitPage extends StatefulWidget {
 class _WaitPageState extends State<WaitPage> {
   final userCollection = FirebaseFirestore.instance.collection('user');
   int? userCounts;
-
-  // groupIDからグループの登録人数(予定)を取り出す処理
-  // Future<void> fetchCounts() async {
-  //   final groupDoc = await FirebaseFirestore.instance
-  //       .collection('group')
-  //       .doc(widget.groupID)
-  //       .get();
-  //   userCounts = await groupDoc.data()!['userCounts'];
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -41,27 +37,27 @@ class _WaitPageState extends State<WaitPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     userCounts = snapshot.data!['userCounts'];
-                    print('userCounts:' + userCounts.toString());
+
+                    // debug
+                    if (kDebugMode) {
+                      print('wait_page');
+                      print('userCounts:$userCounts');
+                      print('groupID:${widget.groupID}');
+                    }
+
                     return _registerBuilder(context);
                   } else {
-                    return const Text('読み込み中');
+                    return const CircularProgressIndicator();
                   }
                 }),
-            Text(
-              '他の人の入力が終わるまでお待ちください',
-              style: GoogleFonts.mPlusRounded1c(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
             const SizedBox(width: 100, height: 20),
-            Text('groupID:${widget.groupID}')
           ],
         ),
       ),
     );
   }
 
+  // groupに登録されたユーザー数を読み込んだ後のウィジェット
   Widget _registerBuilder(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: userCollection
@@ -76,7 +72,7 @@ class _WaitPageState extends State<WaitPage> {
         if (!snapshot.hasData) {
           return const Text('データがありません');
         }
-
+        // グループのドキュメント（データ）
         final docs = snapshot.data!.docs;
 
         /*
@@ -85,6 +81,14 @@ class _WaitPageState extends State<WaitPage> {
         if (userCounts == docs.length) {
           // 登録された人数が、入力したuserCountsに達したとき
           children = <Widget>[
+            Text(
+              '登録完了しました',
+              style: GoogleFonts.mPlusRounded1c(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+              ),
+            ),
+            const SizedBox(height: 40),
             const CustomButton(
               title: "すすむ",
               width: 120,
@@ -93,12 +97,17 @@ class _WaitPageState extends State<WaitPage> {
             ),
           ];
         } else if (userCounts! > docs.length) {
+          var remainMem = userCounts! - docs.length;
           children = <Widget>[
-            const CustomButton(
-              title: "人数分の登録完了まで\nしばらくお待ちください",
-              width: 280,
-              height: 70,
-            )
+            Container(),
+            const CustomText(text: 'のこり', fontSize: 30),
+            CustomText(text: remainMem.toString(), fontSize: 60),
+            const CustomText(text: '人', fontSize: 30),
+            const SizedBox(height: 50),
+            const Center(
+              child: CustomText(text: '他の人の入力が終わるまで\nお待ちください', fontSize: 20),
+            ),
+            const SizedBox(height: 30),
           ];
         } else {
           // 入力したユーザの数より多い人数のデータが入力されたとき
