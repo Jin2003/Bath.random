@@ -1,4 +1,4 @@
-import 'package:bath_random/pages/group_select_page.dart';
+import 'package:bath_random/pages/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: const GroupSelectPage(),
-      //home: const StartPage(),
+      home: const StartPage(),
     );
   }
 }

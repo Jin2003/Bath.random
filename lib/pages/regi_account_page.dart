@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegiAccountPage extends StatefulWidget {
   final String groupID;
@@ -19,15 +20,21 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
   // get child => null;
   TextEditingController userNameController = TextEditingController();
   TextEditingController bathTimeController = TextEditingController();
+  String userID = "";
 
   // ユーザー登録の処理
   Future<void> createUser() async {
     final userCollection = FirebaseFirestore.instance.collection('user');
-    userCollection.add({
+    userID = userCollection.doc().id;
+    await userCollection.doc(userID).set({
       'groupID': widget.groupID,
       'userName': userNameController.text,
       'bathTime': int.parse(bathTimeController.text),
     });
+    // ローカルにIDを保存
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('userID', userID);
+    prefs.setString('groupID', widget.groupID);
   }
 
   @override
@@ -78,7 +85,6 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
               ),
               // お風呂時間の入力ボックス
               TextField(
-                // 入力する値を数字のみに限定
                 keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 controller: bathTimeController,
@@ -98,12 +104,11 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                 title: '次へ',
                 width: 120,
                 height: 45,
-                onPressed: () {
-                  createUser();
-                  print('createUser');
-                },
-                nextPage: WaitPage(groupID: widget.groupID),
-              )
+                onPressed: () => createUser(),
+                nextPage: WaitPage(
+                  groupID: widget.groupID,
+                ),
+              ),
             ],
           ),
         ),

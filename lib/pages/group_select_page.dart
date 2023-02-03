@@ -17,15 +17,15 @@ class GroupSelectPage extends StatelessWidget {
             // groupを作る側が押すボタン
             CustomButton(
               title: "グループを作る",
-              width: 120,
-              height: 45,
+              width: 210,
+              height: 60,
               nextPage: GroupCreatePage(),
             ),
             SizedBox(height: 50),
             // user側が押すボタン
             CustomButton(
-              width: 120,
-              height: 45,
+              width: 210,
+              height: 60,
               title: "グループに参加する",
               nextPage: QrReadPage(),
             ),
