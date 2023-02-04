@@ -30,6 +30,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
       'groupID': widget.groupID,
       'userName': userNameController.text,
       'bathTime': int.parse(bathTimeController.text),
+      'order': null,
     });
     // ローカルにIDを保存
     final SharedPreferences prefs = await SharedPreferences.getInstance();

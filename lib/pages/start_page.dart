@@ -1,4 +1,3 @@
-import 'package:bath_random/pages/components/custom_FA_Button.dart.dart';
 import 'package:bath_random/pages/group_select_page.dart';
 import 'package:bath_random/pages/main_page.dart';
 import 'package:flutter/material.dart';
@@ -77,9 +76,18 @@ class _StartPageState extends State<StartPage> {
           ],
         ),
       ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton:
+      //     CustomFAButton(buttonTitle: buttonTitle, nextPage: nextPage),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton:
-          CustomFAButton(buttonTitle: buttonTitle, nextPage: nextPage),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => nextPage!),
+            );
+          },
+          label: Text(buttonTitle)),
     );
   }
 }

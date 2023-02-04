@@ -1,5 +1,4 @@
 import 'package:bath_random/model/user.dart';
-import 'package:bath_random/pages/components/custom_FA_Button.dart.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,10 +13,11 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  String userID = "読み込み中";
-  String groupID = "読み込み中";
+  String userID = "";
+  String groupID = "";
+  bool isNullOrder = false;
 
-  // final userCollection = FirebaseFirestore.instance.collection('user');
+  final userCollection = FirebaseFirestore.instance.collection('user');
 
   // IDをローカルから取得
   Future<String> fetchID() async {
@@ -37,6 +37,43 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
+  // orderがnullかどうかを確認するメソッド
+  Future checkOrder() async {
+    final userCollection =
+        await FirebaseFirestore.instance.collection('user').doc(userID).get();
+    final data = userCollection.data();
+    print(data!['order']);
+    isNullOrder = (data['order'] == null);
+  }
+
+  // 全員の順番をシャッフルする処理
+  Future<void> shuffleOrder() async {
+    // 同じグループのユーザーのデータを配列に格納
+    List users = [];
+    final userCollection = await FirebaseFirestore.instance
+        .collection('user')
+        .where('groupID', isEqualTo: groupID)
+        .get();
+    final docs = userCollection.docs;
+    for (var doc in docs) {
+      var fetchUserID = doc.data()['userID'];
+      users.add(fetchUserID);
+    }
+
+    // ユーザーをシャッフルする
+    users.shuffle();
+
+    // ユーザーのorder(順番)にusersの配列番号を入れる
+    for (var user in users) {
+      int index = 0;
+      final doc = FirebaseFirestore.instance.collection('user').doc(user);
+      await doc.update({
+        'order': index++,
+      });
+    }
+    print('shuffle suceeded');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +89,9 @@ class _MainPageState extends State<MainPage> {
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                // ハンバーガーメニュー押した時
+              },
               icon: const Icon(Icons.dehaze_rounded),
             ),
           ],
@@ -63,7 +102,7 @@ class _MainPageState extends State<MainPage> {
       ),
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
 
-      // IDの取得処理完了後、リスト表示に移行するウィジェット
+      // IDの取得処理完了後、リスト表示に移行
       body: FutureBuilder(
         future: fetchID(),
         builder: (context, snapshot) {
@@ -76,47 +115,54 @@ class _MainPageState extends State<MainPage> {
             return Text(snapshot.error.toString());
           }
 
-          //
+          // データ取得失敗
           if (!snapshot.hasData) {
             return const Center(
-              child: Text('nodata'),
+              child: Text('NO DATA'),
             );
           } else {
-            return _listBuilder(context);
+            // ID取得処理成功
+            return FutureBuilder(
+              future: checkOrder(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const CircularProgressIndicator();
+                }
+
+                if (!snapshot.hasData) {
+                  // orderがnullだったら整列しない
+                  if (isNullOrder) {
+                    return _listBuilder(
+                        context,
+                        FirebaseFirestore.instance
+                            .collection('user')
+                            .where('groupID', isEqualTo: groupID)
+                            .snapshots());
+                  } else {
+                    // nullじゃなかったら整列
+                    return _listBuilder(
+                        context,
+                        FirebaseFirestore.instance
+                            .collection('user')
+                            .where('groupID', isEqualTo: groupID)
+                            .orderBy('order')
+                            .snapshots());
+                  }
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            );
           }
         },
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomFAButton(
-            iconImage: const Icon(Icons.bathtub),
-            buttonTitle: 'スタート',
-            onPressed: () {
-              // TODO: お風呂スタート処理
-            },
-          ),
-          const SizedBox(width: 20),
-          CustomFAButton(
-            iconImage: const Icon(Icons.cached),
-            buttonTitle: 'シャッフル',
-            onPressed: () {
-              // TODO: 順番シャッフル処理
-            },
-          ),
-        ],
       ),
     );
   }
 
   // グループの状態をデータに応じて更新
-  Widget _listBuilder(BuildContext context) {
+  Widget _listBuilder(BuildContext context, Stream stream) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance
-          .collection('user')
-          .where('groupID', isEqualTo: groupID)
-          .snapshots(),
+      stream: stream,
       builder: ((context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -146,6 +192,7 @@ class _MainPageState extends State<MainPage> {
               child: ListTile(
                 leading: const Icon(Icons.people),
                 title: Text(users.userName),
+                // 風呂に入る時間 表示部分
                 subtitle: const Text('18:00-19:00'),
                 trailing: Text("${users.bathTime}min"),
               ),
