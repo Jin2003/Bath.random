@@ -88,6 +88,7 @@ class _StartPageState extends State<StartPage> {
       //     ],
       //   ),
       // ),
+
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton:
       //     CustomFAButton(buttonTitle: buttonTitle, nextPage: nextPage),
