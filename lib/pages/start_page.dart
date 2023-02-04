@@ -56,26 +56,38 @@ class _StartPageState extends State<StartPage> {
       BuildContext context, String buttonTitle, Widget? nextPage) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Align(
-              alignment: const Alignment(0, 0.8),
-              child: Text(
-                "Bath.random();",
-                style: GoogleFonts.orbitron(
-                  textStyle: const TextStyle(
-                    fontSize: 35,
-                    //fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.asset(
+              "images/start_page.png",
+              fit: BoxFit.cover,
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: <Widget>[
+      //       Align(
+      //         alignment: const Alignment(0, 0.8),
+      //         child: Text(
+      //           "Bath.random();",
+      //           style: GoogleFonts.orbitron(
+      //             textStyle: const TextStyle(
+      //               fontSize: 35,
+      //               //fontWeight: FontWeight.bold,
+      //               color: Colors.white,
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton:
       //     CustomFAButton(buttonTitle: buttonTitle, nextPage: nextPage),
