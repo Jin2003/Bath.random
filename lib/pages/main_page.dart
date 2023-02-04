@@ -1,4 +1,8 @@
+import 'dart:developer';
+
 import 'package:bath_random/model/user.dart';
+import 'package:bath_random/pages/components/custom_button.dart';
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +23,7 @@ class _MainPageState extends State<MainPage> {
 
   final userCollection = FirebaseFirestore.instance.collection('user');
 
-  // IDをローカルから取得
+  // IDをローカルから取得する関数
   Future<String> fetchID() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -37,16 +41,15 @@ class _MainPageState extends State<MainPage> {
     }
   }
 
-  // orderがnullかどうかを確認するメソッド
+  // orderがnullかどうかを確認する関数
   Future checkOrder() async {
     final userCollection =
         await FirebaseFirestore.instance.collection('user').doc(userID).get();
     final data = userCollection.data();
-    print(data!['order']);
-    isNullOrder = (data['order'] == null);
+    isNullOrder = (data!['order'] == null);
   }
 
-  // 全員の順番をシャッフルする処理
+  // 全員の順番をシャッフルする関数
   Future<void> shuffleOrder() async {
     // 同じグループのユーザーのデータを配列に格納
     List users = [];
@@ -56,22 +59,21 @@ class _MainPageState extends State<MainPage> {
         .get();
     final docs = userCollection.docs;
     for (var doc in docs) {
-      var fetchUserID = doc.data()['userID'];
+      var fetchUserID = doc.id;
       users.add(fetchUserID);
     }
 
-    // ユーザーをシャッフルする
+    // ユーザーIDの配列をシャッフルする
     users.shuffle();
 
     // ユーザーのorder(順番)にusersの配列番号を入れる
+    int index = 0;
     for (var user in users) {
-      int index = 0;
       final doc = FirebaseFirestore.instance.collection('user').doc(user);
       await doc.update({
         'order': index++,
       });
     }
-    print('shuffle suceeded');
   }
 
   @override
@@ -126,7 +128,7 @@ class _MainPageState extends State<MainPage> {
               future: checkOrder(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState != ConnectionState.done) {
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (!snapshot.hasData) {
@@ -137,7 +139,8 @@ class _MainPageState extends State<MainPage> {
                         FirebaseFirestore.instance
                             .collection('user')
                             .where('groupID', isEqualTo: groupID)
-                            .snapshots());
+                            .snapshots(),
+                        isNullOrder);
                   } else {
                     // nullじゃなかったら整列
                     return _listBuilder(
@@ -146,7 +149,8 @@ class _MainPageState extends State<MainPage> {
                             .collection('user')
                             .where('groupID', isEqualTo: groupID)
                             .orderBy('order')
-                            .snapshots());
+                            .snapshots(),
+                        isNullOrder);
                   }
                 } else {
                   return const CircularProgressIndicator();
@@ -159,8 +163,8 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  // グループの状態をデータに応じて更新
-  Widget _listBuilder(BuildContext context, Stream stream) {
+  // グループの状態のリストをデータに応じて更新
+  Widget _listBuilder(BuildContext context, Stream stream, bool isNullOrder) {
     return StreamBuilder(
       stream: stream,
       builder: ((context, snapshot) {
@@ -168,36 +172,57 @@ class _MainPageState extends State<MainPage> {
           return const CircularProgressIndicator();
         }
         if (!snapshot.hasData) {
-          return const Center(child: Text('データがありません'));
+          return const Center(
+              child: CustomText(text: 'データが見つかりません', fontSize: 16));
         }
-        final docs = snapshot.data!.docs;
+        dynamic docs = snapshot.data!.docs;
 
-        return ListView.builder(
-          itemCount: docs.length,
-          itemBuilder: (context, index) {
-            Map<String, dynamic> data = docs[index].data();
-            final User users = User(
-              userName: data['userName'],
-              bathTime: data['bathTime'],
-            );
+        return Stack(
+          children: [
+            // リスト部分
+            ListView.builder(
+              itemCount: docs.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic> data = docs[index].data();
+                final User users = User(
+                  userName: data['userName'],
+                  bathTime: data['bathTime'],
+                );
 
-            return Card(
-              color: Colors.white, // Card自体の色
-              margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-              elevation: 10,
-              shadowColor: Colors.black,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                return Card(
+                  color: Colors.white, // Card自体の色
+                  margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                  elevation: 10,
+                  shadowColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: ListTile(
+                    leading: const Icon(Icons.people),
+                    title: Text(users.userName),
+                    // TODO: 風呂に入る時間 表示部分
+                    subtitle: const Text('18:00-19:00'),
+                    trailing: Text("${users.bathTime}min"),
+                  ),
+                );
+              },
+            ),
+            // ボタン部分
+            Padding(
+              padding: const EdgeInsets.all(40.0),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: CustomButton(
+                  height: 45,
+                  width: 160,
+                  title: 'シャッフル',
+                  onPressed: () {
+                    shuffleOrder();
+                  },
+                ),
               ),
-              child: ListTile(
-                leading: const Icon(Icons.people),
-                title: Text(users.userName),
-                // 風呂に入る時間 表示部分
-                subtitle: const Text('18:00-19:00'),
-                trailing: Text("${users.bathTime}min"),
-              ),
-            );
-          },
+            ),
+          ],
         );
       }),
     );
