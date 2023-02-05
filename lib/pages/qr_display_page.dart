@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/group_create_page.dart';
 import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -28,7 +31,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
     groupCollection.doc(groupID).set({
       'groupID': groupID,
       'userCounts': int.parse(widget.userCounts),
-      'isOrderFixed': false,
+      'isSetOrder': false,
     });
   }
 
@@ -98,6 +101,12 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                 final docs = snapshot.data!.docs;
                 var userCounts = int.parse(widget.userCounts);
 
+                // debug
+                if (kDebugMode) {
+                  log('groupID: $groupID');
+                  log('userCounts: ${widget.userCounts}');
+                }
+
                 // 登録したユーザの数がuserCounts(入力した値)に達したら'すすむ'
                 if (userCounts - 1 == docs.length) {
                   children = <Widget>[
@@ -147,9 +156,6 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               height: 45,
               nextPage: GroupCreatePage(deleteGroupId: groupID),
             ),
-            // TODO: debug
-            Text(groupID),
-            Text(widget.userCounts),
           ],
         ),
       ),

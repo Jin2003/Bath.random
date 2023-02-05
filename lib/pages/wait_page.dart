@@ -114,7 +114,7 @@ class _WaitPageState extends State<WaitPage> {
           children = <Widget>[
             const CustomButton(
               title: "登録した人数が間違えています",
-              width: 120,
+              width: 200,
               height: 45,
             ),
           ];

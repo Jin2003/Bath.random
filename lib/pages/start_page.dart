@@ -1,7 +1,6 @@
 import 'package:bath_random/pages/group_select_page.dart';
 import 'package:bath_random/pages/main_page.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class StartPage extends StatefulWidget {

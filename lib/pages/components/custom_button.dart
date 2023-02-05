@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final double height;
   final Widget? nextPage;
   final Function? onPressed;
+  final bool isDisabled = false;
 
   const CustomButton({
     Key? key,

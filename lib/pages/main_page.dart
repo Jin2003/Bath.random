@@ -1,12 +1,13 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:bath_random/model/user.dart';
-import 'package:bath_random/pages/components/custom_button.dart';
 import 'package:bath_random/pages/components/custom_text.dart';
+import 'package:bath_random/pages/start_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class MainPage extends StatefulWidget {
@@ -17,11 +18,12 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final db = FirebaseFirestore.instance;
   String userID = "";
   String groupID = "";
-  bool isNullOrder = false;
-
-  final userCollection = FirebaseFirestore.instance.collection('user');
+  bool isNullOrder = false; // orderが代入されているかどうか
+  bool isSetOrder = false; // orderがシャッフルされているかどうか
+  DateTime? groupStartTime;
 
   // IDをローカルから取得する関数
   Future<String> fetchID() async {
@@ -43,20 +45,17 @@ class _MainPageState extends State<MainPage> {
 
   // orderがnullかどうかを確認する関数
   Future checkOrder() async {
-    final userCollection =
-        await FirebaseFirestore.instance.collection('user').doc(userID).get();
+    final userCollection = await db.collection('user').doc(userID).get();
     final data = userCollection.data();
     isNullOrder = (data!['order'] == null);
   }
 
   // 全員の順番をシャッフルする関数
-  Future<void> shuffleOrder() async {
+  Future shuffleOrder() async {
     // 同じグループのユーザーのデータを配列に格納
     List users = [];
-    final userCollection = await FirebaseFirestore.instance
-        .collection('user')
-        .where('groupID', isEqualTo: groupID)
-        .get();
+    final userCollection =
+        await db.collection('user').where('groupID', isEqualTo: groupID).get();
     final docs = userCollection.docs;
     for (var doc in docs) {
       var fetchUserID = doc.id;
@@ -69,13 +68,38 @@ class _MainPageState extends State<MainPage> {
     // ユーザーのorder(順番)にusersの配列番号を入れる
     int index = 0;
     for (var user in users) {
-      final doc = FirebaseFirestore.instance.collection('user').doc(user);
+      final doc = db.collection('user').doc(user);
       await doc.update({
         'order': index++,
       });
     }
+
+    // 順番シャッフルを一旦無効化する
+    db.collection('group').doc(groupID).update({
+      'isSetOrder': true,
+    });
   }
 
+  // お風呂のタイマーをスタートする関数
+  Future startBath() async {
+    // groupStartTime = DateTime.now(); // お風呂のスタートボタンを押した時間
+
+    // スタート時間をグループコレクションに記録
+    await db
+        .collection('group')
+        .doc(groupID)
+        .update({'groupStartTime': DateTime.now()});
+  }
+
+  Future enableStart() async {
+    await db.collection('group').doc(groupID).update({
+      'isSetOrder': false,
+    });
+  }
+
+  /*
+    ---------- ウィジェット部分 ----------
+   */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +126,78 @@ class _MainPageState extends State<MainPage> {
           elevation: 0,
         ),
       ),
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            const DrawerHeader(
+              decoration: BoxDecoration(
+                color: Color.fromARGB(255, 152, 233, 244),
+              ),
+              child: Text(
+                'デモ用メニュー',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+                leading: const Icon(Icons.toggle_on_outlined),
+                title: const Text('スタートボタンを有効にする'),
+                onTap: () {
+                  Future(() async {
+                    await enableStart();
+                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StartPage(),
+                    ),
+                  );
+                }),
+            ListTile(
+              leading: const Icon(Icons.switch_account),
+              title: const Text('デモ用のデータに移動する'),
+              onTap: () {
+                groupID = 'grO7qrXoht7jZYjEQH0a';
+                userID = 'K7V2qcKZgAPPr6xZZxFs';
+                Future(
+                  () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.setString('groupID', groupID);
+                    prefs.setString('userID', userID);
+                  },
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StartPage(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.face),
+              title: const Text('新しくグループを作成する'),
+              onTap: () {
+                Future(
+                  () async {
+                    final prefs = await SharedPreferences.getInstance();
+                    prefs.clear();
+                  },
+                );
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StartPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
       backgroundColor: const Color.fromARGB(255, 152, 233, 244),
 
       // IDの取得処理完了後、リスト表示に移行
@@ -120,7 +216,7 @@ class _MainPageState extends State<MainPage> {
           // データ取得失敗
           if (!snapshot.hasData) {
             return const Center(
-              child: Text('NO DATA'),
+              child: CircularProgressIndicator(),
             );
           } else {
             // ID取得処理成功
@@ -134,18 +230,18 @@ class _MainPageState extends State<MainPage> {
                 if (!snapshot.hasData) {
                   // orderがnullだったら整列しない
                   if (isNullOrder) {
-                    return _listBuilder(
+                    return _checkBuilder(
                         context,
-                        FirebaseFirestore.instance
+                        db
                             .collection('user')
                             .where('groupID', isEqualTo: groupID)
                             .snapshots(),
                         isNullOrder);
                   } else {
                     // nullじゃなかったら整列
-                    return _listBuilder(
+                    return _checkBuilder(
                         context,
-                        FirebaseFirestore.instance
+                        db
                             .collection('user')
                             .where('groupID', isEqualTo: groupID)
                             .orderBy('order')
@@ -164,7 +260,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   // グループの状態のリストをデータに応じて更新
-  Widget _listBuilder(BuildContext context, Stream stream, bool isNullOrder) {
+  Widget _checkBuilder(BuildContext context, Stream stream, bool isNullOrder) {
     return StreamBuilder(
       stream: stream,
       builder: ((context, snapshot) {
@@ -177,54 +273,128 @@ class _MainPageState extends State<MainPage> {
         }
         dynamic docs = snapshot.data!.docs;
 
-        return Stack(
-          children: [
-            // リスト部分
-            ListView.builder(
-              itemCount: docs.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> data = docs[index].data();
-                final User users = User(
-                  userName: data['userName'],
-                  bathTime: data['bathTime'],
+        return StreamBuilder(
+            stream: db.collection('group').doc(groupID).snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
+              } else {
+                // isSetOrderがとってこれた時
+                isSetOrder = snapshot.data!.data()!['isSetOrder'];
 
-                return Card(
-                  color: Colors.white, // Card自体の色
-                  margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-                  elevation: 10,
-                  shadowColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    leading: const Icon(Icons.people),
-                    title: Text(users.userName),
-                    // TODO: 風呂に入る時間 表示部分
-                    subtitle: const Text('18:00-19:00'),
-                    trailing: Text("${users.bathTime}min"),
-                  ),
-                );
-              },
-            ),
-            // ボタン部分
-            Padding(
-              padding: const EdgeInsets.all(40.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: CustomButton(
-                  height: 45,
-                  width: 160,
-                  title: 'シャッフル',
-                  onPressed: () {
-                    shuffleOrder();
-                  },
-                ),
-              ),
-            ),
-          ],
-        );
+                return _listBuilder(context, docs, isSetOrder);
+              }
+            });
       }),
+    );
+  }
+
+  // リスト表示部分のウィジェット
+  Widget _listBuilder(BuildContext context, dynamic docs, bool isSetOrder) {
+    dynamic myStartTime;
+    dynamic myEndTime;
+    dynamic nextStartTime;
+
+    return Stack(
+      children: [
+        // リスト部分
+        ListView.builder(
+          itemCount: docs.length,
+          itemBuilder: (context, index) {
+            Map<String, dynamic> data = docs[index].data();
+            final User users = User(
+              userName: data['userName'],
+              bathTime: data['bathTime'],
+            );
+
+            if (isSetOrder) {
+              return StreamBuilder(
+                  stream: db.collection('group').doc(groupID).snapshots(),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      Timestamp startTime =
+                          snapshot.data!.data()!['groupStartTime'];
+                      groupStartTime = startTime.toDate();
+
+                      if (index == 0) {
+                        myStartTime = groupStartTime;
+                      } else {
+                        myStartTime = nextStartTime;
+                      }
+                      myEndTime =
+                          myStartTime!.add(Duration(minutes: users.bathTime));
+                      nextStartTime =
+                          myEndTime.add(const Duration(minutes: 10));
+
+                      return Card(
+                        color: Colors.white, // Card自体の色
+                        margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                        elevation: 10,
+                        shadowColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: ListTile(
+                          leading: const Icon(Icons.people),
+                          title: Text(users.userName),
+                          subtitle: !isSetOrder
+                              ? null
+                              : Text(
+                                  DateFormat('HH:mm - ').format(myStartTime) +
+                                      DateFormat('HH:mm').format(myEndTime)),
+                          trailing: Text("${users.bathTime}min"),
+                        ),
+                      );
+                    }
+                  });
+            } else {
+              return Card(
+                color: Colors.white, // Card自体の色
+                margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                elevation: 10,
+                shadowColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: ListTile(
+                  leading: const Icon(Icons.people),
+                  title: Text(users.userName),
+                  trailing: Text("${users.bathTime}min"),
+                ),
+              );
+            }
+          },
+        ),
+        // ボタン部分
+        Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: OutlinedButton(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: const Color.fromARGB(255, 255, 249, 249),
+                fixedSize: const Size(100, 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                side: const BorderSide(width: 0.5),
+              ),
+              onPressed: isSetOrder
+                  ? null
+                  : () async {
+                      await shuffleOrder();
+                      await startBath();
+                    },
+              child: const Text('スタート'),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
