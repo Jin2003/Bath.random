@@ -1,5 +1,5 @@
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class CustomButton extends StatelessWidget {
   final String title;
@@ -21,14 +21,6 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
-      // ignore: sort_child_properties_last
-      child: Text(
-        title,
-        style: GoogleFonts.mPlusRounded1c(
-          fontWeight: FontWeight.bold,
-          fontSize: 17,
-        ),
-      ),
       style: OutlinedButton.styleFrom(
         foregroundColor: Colors.black,
         backgroundColor: const Color.fromARGB(255, 255, 249, 249),
@@ -52,6 +44,7 @@ class CustomButton extends StatelessWidget {
           );
         }
       },
+      child: CustomText(text: title, fontSize: 17),
     );
 
     // OutlinedButton(

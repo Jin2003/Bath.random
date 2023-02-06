@@ -374,16 +374,17 @@ class _MainPageState extends State<MainPage> {
         Padding(
           padding: const EdgeInsets.all(100.0),
           child: Align(
-            alignment: const Alignment(0, 1.2),
+            alignment: Alignment.bottomCenter,
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black,
+                foregroundColor: Colors.grey.shade700,
                 backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-                fixedSize: const Size(100, 40),
+                fixedSize: const Size(130, 45),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                side: const BorderSide(width: 0.5),
+                side: const BorderSide(color: Colors.white),
+                elevation: 3,
               ),
               onPressed: isSetOrder
                   ? null
@@ -391,7 +392,11 @@ class _MainPageState extends State<MainPage> {
                       await shuffleOrder();
                       await startBath();
                     },
-              child: const Text('スタート'),
+              child: const Text('スタート',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  )),
             ),
           ),
         ),

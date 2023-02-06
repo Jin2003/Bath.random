@@ -7,7 +7,6 @@ import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrDisplayPage extends StatefulWidget {
@@ -71,14 +70,11 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               width: 100,
               height: 20,
             ),
-            Text(
-              "(共有相手)\n1.Bath.random();をダウンロード\n\n"
-              "2.上のQRコードをスマホのカメラまたは\n　QRコードアプリでスキャン\n\n"
-              "3.アカウントを作成",
-              style: GoogleFonts.mPlusRounded1c(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+            const CustomText(
+              text: "(共有相手)\n1.Bath.random();をダウンロード\n\n"
+                  "2.上のQRコードをスマホのカメラまたは\n　QRコードアプリでスキャン\n\n"
+                  "3.アカウントを作成",
+              fontSize: 16,
             ),
             const SizedBox(
               width: 100,

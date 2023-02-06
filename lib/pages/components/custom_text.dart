@@ -17,6 +17,7 @@ class CustomText extends StatelessWidget {
       style: GoogleFonts.mPlusRounded1c(
         fontWeight: FontWeight.bold,
         fontSize: fontSize,
+        color: Colors.grey.shade800,
       ),
     );
   }
