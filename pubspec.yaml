@@ -38,12 +38,18 @@ dependencies:
   qr_code_scanner: ^1.0.1 #QRコードの読み取り
   shared_preferences: ^2.0.17 #ローカルデータ保存
   intl: ^0.18.0 #日付のフォーマット
+  flutter_launcher_icons: ^0.11.0 #アイコン表示
 
 # Qr_reader/2023/01/26/------------------
 camera: ^0.9.4+19 #デバイス上のカメラを操作するためのツール
 path_provider: ^2.0.9 #画像の保存場所を見つけ出してくれる
 path: ^1.8.0 #画像の保存場所を作成してくれる
 
+# icon/2023/02/06
+flutter_icons:       
+  android: true
+  ios: true
+  image_path: "assets/bath_icon.png"
 
 # The following adds the Cupertino Icons font to your application.
 # Use with the CupertinoIcons class for iOS style icons.
