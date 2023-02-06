@@ -126,6 +126,7 @@ class _MainPageState extends State<MainPage> {
           elevation: 0,
         ),
       ),
+
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -371,9 +372,9 @@ class _MainPageState extends State<MainPage> {
         ),
         // ボタン部分
         Padding(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(100.0),
           child: Align(
-            alignment: Alignment.bottomCenter,
+            alignment: const Alignment(0, 1.2),
             child: OutlinedButton(
               style: OutlinedButton.styleFrom(
                 foregroundColor: Colors.black,

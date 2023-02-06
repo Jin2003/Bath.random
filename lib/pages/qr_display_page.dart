@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bath_random/pages/components/custom_button.dart';
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:bath_random/pages/group_create_page.dart';
 import 'package:bath_random/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -120,22 +121,28 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                     ),
                   ];
                 } else if (userCounts - 1 > docs.length) {
+                  var members = userCounts - docs.length - 1;
                   // 登録したユーザの数が足りないとき
                   children = <Widget>[
-                    const CustomButton(
-                      title: "人数分の登録完了まで\nしばらくお待ちください",
-                      width: 280,
-                      height: 70,
-                    ),
+                    const CustomText(
+                        text: '人数分の登録完了まで\nしばらくお待ちください', fontSize: 18),
+                    const SizedBox(height: 20),
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      const CustomText(text: 'あと', fontSize: 20),
+                      const SizedBox(width: 10),
+                      CustomText(text: members.toString(), fontSize: 38),
+                      const SizedBox(width: 10),
+                      const CustomText(text: '人', fontSize: 20),
+                    ])
                   ];
                 } else {
                   // 登録したユーザの数が多すぎるとき
                   children = <Widget>[
                     const CustomButton(
-                      title: "登録した人数が間違えています",
+                      title: "登録した人数が間違えています\n入力にもどる",
                       width: 120,
                       height: 45,
-                      onPressed: null,
+                      nextPage: GroupCreatePage(),
                     ),
                   ];
                 }

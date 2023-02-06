@@ -26,6 +26,7 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
 
   @override
   Widget build(BuildContext context) {
+    // 戻ってきたらグループを削除
     if (widget.deleteGroupId != null) {
       deleteGroup(widget.deleteGroupId);
     }
