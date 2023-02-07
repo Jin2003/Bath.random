@@ -39,10 +39,10 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 100, height: 70),
-            const CustomText(text: '家族の人数', fontSize: 25),
+            const CustomText(text: '家族の人数', fontSize: 23),
             const SizedBox(width: 100, height: 20),
             Container(
-              width: 180,
+              width: 220,
               height: 60,
               decoration: BoxDecoration(
                 // border: Border.all(color: Colors.black),
@@ -55,18 +55,18 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                 //   height: 3,
                 //   color: Colors.black,
                 // ),
-                iconSize: 40,
+                iconSize: 30,
                 style: TextStyle(
-                  fontSize: 28,
+                  fontSize: 25,
                   //フォント変えたい！！！！！！！！！！！！！！！！！！！！！！
-                  color: Colors.grey.shade800,
+                  color: Colors.grey.shade700,
                 ),
                 value: selectedValue,
                 items: lists
                     .map((String list) => DropdownMenuItem(
                           // ignore: sort_child_properties_last
                           child: Container(
-                            width: 100,
+                            width: 120,
                             alignment: Alignment.center,
                             child: Text(list),
                           ),
@@ -82,19 +82,19 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                 },
               ),
             ),
-            const SizedBox(width: 100, height: 30),
+            const SizedBox(width: 100, height: 20),
             CustomButton(
                 title: '登録',
                 width: 120,
-                height: 45,
+                height: 40,
                 nextPage: QrDisplayPage(
                   userCounts: selectedValue,
                 )),
-            const SizedBox(width: 100, height: 10),
+            const SizedBox(width: 100, height: 5),
             const CustomButton(
               title: 'もどる',
               width: 120,
-              height: 45,
+              height: 40,
               nextPage: GroupSelectPage(),
             ),
           ],
