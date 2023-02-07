@@ -71,14 +71,14 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
               height: 20,
             ),
             const CustomText(
-              text: "(共有相手)\n1.Bath.random();をダウンロード\n\n"
-                  "2.上のQRコードをスマホのカメラまたは\n　QRコードアプリでスキャン\n\n"
+              text: "　(共有相手)\n1.Bath.random();をダウンロード\n"
+                  "2.上のQRコードをスマホのカメラまたは\n　QRコードアプリでスキャン\n"
                   "3.アカウントを作成",
               fontSize: 16,
             ),
             const SizedBox(
               width: 100,
-              height: 20,
+              height: 35,
             ),
             // ユーザーが登録した人数を検知してウィジェットを表示
             StreamBuilder<QuerySnapshot>(
@@ -121,7 +121,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
                   // 登録したユーザの数が足りないとき
                   children = <Widget>[
                     const CustomText(
-                        text: '人数分の登録完了まで\nしばらくお待ちください', fontSize: 18),
+                        text: '人数分の登録完了まで\nしばらくお待ちください', fontSize: 16),
                     const SizedBox(height: 20),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       const CustomText(text: 'あと', fontSize: 20),

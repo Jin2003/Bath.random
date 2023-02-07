@@ -4,7 +4,7 @@ import 'package:bath_random/pages/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 class WaitPage extends StatefulWidget {
   final String groupID;
@@ -81,13 +81,7 @@ class _WaitPageState extends State<WaitPage> {
         if (userCounts == docs.length) {
           // 登録された人数が、入力したuserCountsに達したとき
           children = <Widget>[
-            Text(
-              '登録完了しました',
-              style: GoogleFonts.mPlusRounded1c(
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-              ),
-            ),
+            const CustomText(text: '登録完了しました', fontSize: 20),
             const SizedBox(height: 40),
             const CustomButton(
               title: "すすむ",
