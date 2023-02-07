@@ -41,7 +41,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
     createGroup();
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

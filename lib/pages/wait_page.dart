@@ -24,7 +24,7 @@ class _WaitPageState extends State<WaitPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

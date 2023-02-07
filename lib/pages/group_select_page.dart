@@ -12,7 +12,7 @@ class GroupSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,

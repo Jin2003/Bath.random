@@ -54,7 +54,7 @@ class _StartPageState extends State<StartPage> {
   Widget _logoWidget(
       BuildContext context, String buttonTitle, Widget? nextPage) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
 
       body: Stack(
         children: [
@@ -93,6 +93,7 @@ class _StartPageState extends State<StartPage> {
       //     CustomFAButton(buttonTitle: buttonTitle, nextPage: nextPage),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Colors.white,
           onPressed: () {
             Navigator.push(
               context,

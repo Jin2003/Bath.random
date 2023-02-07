@@ -1,9 +1,9 @@
 import 'package:bath_random/pages/components/custom_button.dart';
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:bath_random/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegiAccountPage extends StatefulWidget {
@@ -41,7 +41,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(50),
@@ -49,11 +49,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // 入力欄
-              Text('あなたのニックネーム',
-                  style: GoogleFonts.mPlusRounded1c(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 25,
-                  )),
+              const CustomText(text: 'あなたのニックネーム', fontSize: 25),
               const SizedBox(
                 width: 100,
                 height: 10,
@@ -69,21 +65,10 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
                     )),
                     labelText: 'your nickname'),
               ),
-              const SizedBox(
-                width: 100,
-                height: 25,
-              ),
-              Text(
-                '入浴時間',
-                style: GoogleFonts.mPlusRounded1c(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
-              ),
-              const SizedBox(
-                width: 100,
-                height: 10,
-              ),
+              const SizedBox(height: 28),
+              const CustomText(text: '入浴時間', fontSize: 25),
+              const CustomText(text: '分単位で入力してください', fontSize: 16),
+              const SizedBox(height: 10),
               // お風呂時間の入力ボックス
               TextField(
                 keyboardType: TextInputType.number,

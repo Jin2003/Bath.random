@@ -84,7 +84,7 @@ class _QrReadPageState extends State<QrReadPage> {
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

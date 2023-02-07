@@ -1,3 +1,4 @@
+import 'package:bath_random/pages/components/custom_text.dart';
 import 'package:bath_random/pages/group_select_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -32,24 +33,20 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 152, 233, 244),
+      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const SizedBox(width: 100, height: 70),
-            Text('家族の人数',
-                style: GoogleFonts.mPlusRounded1c(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                )),
-            const SizedBox(width: 100, height: 10),
+            const CustomText(text: '家族の人数', fontSize: 25),
+            const SizedBox(width: 100, height: 20),
             Container(
-              width: 220,
+              width: 180,
               height: 60,
               decoration: BoxDecoration(
-                //border: Border.all(color: Colors.black),
-                color: Colors.white,
+                // border: Border.all(color: Colors.black),
+                color: const Color.fromARGB(255, 255, 249, 249),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: DropdownButton<String>(
@@ -59,10 +56,10 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                 //   color: Colors.black,
                 // ),
                 iconSize: 40,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 28,
                   //フォント変えたい！！！！！！！！！！！！！！！！！！！！！！
-                  color: Colors.black,
+                  color: Colors.grey.shade800,
                 ),
                 value: selectedValue,
                 items: lists
@@ -76,6 +73,7 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                           value: list,
                         ))
                     .toList(),
+                borderRadius: BorderRadius.circular(10),
                 onChanged: (String? value) {
                   setState(() {
                     // 入力した数を渡す

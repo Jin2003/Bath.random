@@ -133,7 +133,7 @@ class _MainPageState extends State<MainPage> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 152, 233, 244),
+                color: Color.fromARGB(255, 150, 222, 231),
               ),
               child: Text(
                 'デモ用メニュー',
@@ -179,7 +179,9 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.face),
+              leading: const Icon(
+                Icons.face,
+              ),
               title: const Text('新しくグループを作成する'),
               onTap: () {
                 Future(
@@ -331,40 +333,62 @@ class _MainPageState extends State<MainPage> {
                       nextStartTime =
                           myEndTime.add(const Duration(minutes: 10));
 
-                      return Card(
-                        color: Colors.white, // Card自体の色
-                        margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-                        elevation: 10,
-                        shadowColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: ListTile(
-                          leading: const Icon(Icons.people),
-                          title: Text(users.userName),
-                          subtitle: !isSetOrder
-                              ? null
-                              : Text(
-                                  DateFormat('HH:mm - ').format(myStartTime) +
-                                      DateFormat('HH:mm').format(myEndTime)),
-                          trailing: Text("${users.bathTime}min"),
+                      return SizedBox(
+                        height: 100,
+                        child: Card(
+                          color: Colors.white, // Card自体の色
+                          margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                          elevation: 10,
+                          shadowColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.face,
+                              size: 26,
+                            ),
+                            title: Text(
+                              users.userName,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w400, fontSize: 17),
+                            ),
+                            subtitle: !isSetOrder
+                                ? null
+                                : Text(
+                                    DateFormat('HH:mm - ').format(myStartTime) +
+                                        DateFormat('HH:mm').format(myEndTime)),
+                            trailing: Text("${users.bathTime}min"),
+                          ),
                         ),
                       );
                     }
                   });
             } else {
-              return Card(
-                color: Colors.white, // Card自体の色
-                margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-                elevation: 10,
-                shadowColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: ListTile(
-                  leading: const Icon(Icons.people),
-                  title: Text(users.userName),
-                  trailing: Text("${users.bathTime}min"),
+              return SizedBox(
+                height: 100,
+                child: Card(
+                  color: Colors.white, // Card自体の色
+                  margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                  elevation: 10,
+                  shadowColor: Colors.black,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: ListTile(
+                      leading: const Icon(
+                        Icons.face,
+                        size: 26,
+                      ),
+                      title: Text(
+                        users.userName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 17),
+                      ),
+                      trailing: Text("${users.bathTime} min"),
+                    ),
+                  ),
                 ),
               );
             }
@@ -372,7 +396,7 @@ class _MainPageState extends State<MainPage> {
         ),
         // ボタン部分
         Padding(
-          padding: const EdgeInsets.all(100.0),
+          padding: const EdgeInsets.all(60.0),
           child: Align(
             alignment: Alignment.bottomCenter,
             child: OutlinedButton(

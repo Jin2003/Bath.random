@@ -22,14 +22,14 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.black,
-        backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-        fixedSize: Size(width, height),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        side: const BorderSide(),
-      ),
+          foregroundColor: Colors.black,
+          backgroundColor: const Color.fromARGB(255, 255, 249, 249),
+          fixedSize: Size(width, height),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          side: BorderSide(color: Colors.grey.shade200),
+          elevation: 6),
       onPressed: () {
         if (onPressed != null) {
           onPressed!();
