@@ -1,4 +1,4 @@
-import 'package:bath_random/pages/components/custom_text.dart';
+import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:flutter/material.dart';
 
 class CustomButton extends StatelessWidget {

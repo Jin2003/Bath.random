@@ -1,3 +1,4 @@
+import 'package:bath_random/view/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,7 +18,7 @@ class CustomText extends StatelessWidget {
       style: GoogleFonts.mPlusRounded1c(
         fontWeight: FontWeight.bold,
         fontSize: fontSize,
-        color: Colors.grey.shade700,
+        color: Constant.lightGreyColor,
       ),
     );
   }

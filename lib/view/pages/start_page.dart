@@ -1,5 +1,6 @@
-import 'package:bath_random/pages/group_select_page.dart';
-import 'package:bath_random/pages/main_page.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/group_select_page.dart';
+import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,8 +19,6 @@ class _StartPageState extends State<StartPage> {
     try {
       final prefs = await SharedPreferences.getInstance();
       groupID = prefs.getString('groupID');
-      // debug データを一旦消す
-      // prefs.clear();
     } catch (error) {
       return Future.error(error);
     }
@@ -54,7 +53,7 @@ class _StartPageState extends State<StartPage> {
   Widget _logoWidget(
       BuildContext context, String buttonTitle, Widget? nextPage) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
 
       body: Stack(
         children: [

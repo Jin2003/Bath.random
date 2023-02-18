@@ -1,10 +1,10 @@
-import 'package:bath_random/pages/components/custom_text.dart';
-import 'package:bath_random/pages/group_select_page.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_text.dart';
+import 'package:bath_random/view/pages/group_select_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'components/custom_button.dart';
-import 'package:bath_random/pages/qr_display_page.dart';
+import 'package:bath_random/view/pages/qr_display_page.dart';
 
 class GroupCreatePage extends StatefulWidget {
   final String? deleteGroupId;
@@ -33,7 +33,7 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
     }
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -50,27 +50,21 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: DropdownButton<String>(
-                // focusColor: Colors.white,
-                // underline: Container(
-                //   height: 3,
-                //   color: Colors.black,
-                // ),
                 iconSize: 30,
                 style: TextStyle(
                   fontSize: 25,
                   //フォント変えたい！！！！！！！！！！！！！！！！！！！！！！
-                  color: Colors.grey.shade700,
+                  color: Constant.lightGreyColor,
                 ),
                 value: selectedValue,
                 items: lists
                     .map((String list) => DropdownMenuItem(
-                          // ignore: sort_child_properties_last
+                          value: list,
                           child: Container(
                             width: 120,
                             alignment: Alignment.center,
                             child: Text(list),
                           ),
-                          value: list,
                         ))
                     .toList(),
                 borderRadius: BorderRadius.circular(10),

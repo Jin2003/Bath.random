@@ -1,8 +1,9 @@
-import 'package:bath_random/pages/components/custom_button.dart';
-import 'package:bath_random/pages/group_create_page.dart';
-import 'package:bath_random/pages/qr_read_page.dart';
+import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
+import 'package:bath_random/view/pages/group_create_page.dart';
+import 'package:bath_random/view/pages/qr_read_page.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'start_page.dart';
 
@@ -12,14 +13,14 @@ class GroupSelectPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
       endDrawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Color.fromARGB(255, 152, 233, 244),
+                color: Constant.lightBlueColor,
               ),
               child: Text(
                 'デモ用メニュー',
@@ -33,15 +34,8 @@ class GroupSelectPage extends StatelessWidget {
                 leading: const Icon(Icons.toggle_on_outlined),
                 title: const Text('デモ用データに移動'),
                 onTap: () {
-                  var groupID = 'grO7qrXoht7jZYjEQH0a';
-                  var userID = 'K7V2qcKZgAPPr6xZZxFs';
-                  Future(
-                    () async {
-                      final prefs = await SharedPreferences.getInstance();
-                      prefs.setString('groupID', groupID);
-                      prefs.setString('userID', userID);
-                    },
-                  );
+                  SharedPreferencesLogic sl = SharedPreferencesLogic();
+                  sl.moveDemo();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

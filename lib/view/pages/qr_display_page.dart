@@ -1,9 +1,10 @@
 import 'dart:developer';
 
-import 'package:bath_random/pages/components/custom_button.dart';
-import 'package:bath_random/pages/components/custom_text.dart';
-import 'package:bath_random/pages/group_create_page.dart';
-import 'package:bath_random/pages/regi_account_page.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
+import 'package:bath_random/view/pages/components/custom_text.dart';
+import 'package:bath_random/view/pages/group_create_page.dart';
+import 'package:bath_random/view/pages/regi_account_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class _QrDisplayPageState extends State<QrDisplayPage> {
     createGroup();
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

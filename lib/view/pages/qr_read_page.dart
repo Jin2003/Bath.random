@@ -1,9 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:bath_random/pages/components/custom_button.dart';
-import 'package:bath_random/pages/group_select_page.dart';
-import 'package:bath_random/pages/regi_account_page.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
+import 'package:bath_random/view/pages/group_select_page.dart';
+import 'package:bath_random/view/pages/regi_account_page.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -84,7 +85,7 @@ class _QrReadPageState extends State<QrReadPage> {
   Widget build(BuildContext context) {
     // ignore: prefer_const_constructors
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

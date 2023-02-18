@@ -1,6 +1,7 @@
-import 'package:bath_random/pages/components/custom_button.dart';
-import 'package:bath_random/pages/components/custom_text.dart';
-import 'package:bath_random/pages/wait_page.dart';
+import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
+import 'package:bath_random/view/pages/components/custom_text.dart';
+import 'package:bath_random/view/pages/wait_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,9 +29,10 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
     userID = userCollection.doc().id;
     await userCollection.doc(userID).set({
       'groupID': widget.groupID,
+      'userID': userID,
       'userName': userNameController.text,
       'bathTime': int.parse(bathTimeController.text),
-      'order': null,
+      'order': 0,
     });
     // ローカルにIDを保存
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -41,7 +43,7 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 150, 222, 231),
+      backgroundColor: Constant.lightBlueColor,
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(50),
