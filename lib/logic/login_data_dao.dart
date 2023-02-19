@@ -88,6 +88,7 @@ class LoginDataDao {
         (event) => GroupData.fromJson(event.data() as Map<String, dynamic>));
   }
 
+  // 同一のグループのユーザを全員取得
   Stream<List<UserData>> streamUserData(String groupID) {
     final stream =
         _userColloction.where('groupID', isEqualTo: groupID).snapshots();
@@ -96,6 +97,12 @@ class LoginDataDao {
           .map((e) => UserData.fromJson(e.data() as Map<String, dynamic>))
           .toList(),
     );
+  }
+
+  // ユーザの情報（１つ）を取得
+  Future<UserData> fetchMyUserData(String userID) async {
+    return await _userColloction.doc(userID).get().then(
+        (value) => UserData.fromJson(value.data() as Map<String, dynamic>));
   }
 
   // groupIDに登録されたユーザー(複数)を取得
@@ -139,6 +146,20 @@ class LoginDataDao {
   Future<void> enableStart(String groupID) async {
     await _groupCollection.doc(groupID).update({
       'isSetOrder': false,
+    });
+  }
+
+  // TODO: index番目の画像をcurrentIconに変更する
+  Future<void> setCurrentIcon(String userID, int index) async {
+    await _userColloction.doc(userID).update({
+      'currentIcon': index,
+    });
+  }
+
+  // TODO: index番目の画像をmyIconsに追加する
+  Future<void> addIcon(String userID, int index) async {
+    await _userColloction.doc(userID).update({
+      'currentIcon': FieldValue.arrayUnion([index]),
     });
   }
 }

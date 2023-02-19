@@ -5,6 +5,7 @@ import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/model/group_data.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/dress_up_page.dart';
 import 'package:bath_random/view/pages/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,6 +19,7 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LoginDataDao _loginDataDao;
   late SharedPreferencesLogic _sharedPreferencesLogic;
   String userID = "";
@@ -48,6 +50,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Constant.lightBlueColor,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60.0),
@@ -62,7 +65,13 @@ class _MainPageState extends State<MainPage> {
           actions: <Widget>[
             IconButton(
               onPressed: () {
-                // ハンバーガーメニュー押した時
+                // return _scaffoldKey.currentState!.openEndDrawer();
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return _bottomSheetWidget(context);
+                  },
+                );
               },
               icon: const Icon(Icons.dehaze_rounded),
             ),
@@ -72,7 +81,7 @@ class _MainPageState extends State<MainPage> {
           elevation: 0,
         ),
       ),
-      endDrawer: _drawerWidget(context),
+      // endDrawer: _drawerWidget(context),
 
       // IDの取得処理完了後、リスト表示に移行
       body: FutureBuilder(
@@ -149,6 +158,8 @@ class _MainPageState extends State<MainPage> {
               itemCount: userDataList.length,
               itemBuilder: (context, index) {
                 Widget? bathTimeWidget;
+                // TODO:currentIconに変更
+                String currentIcon = Constant.dressUp[index];
 
                 if (groupData.isSetOrder) {
                   if (index == 0) {
@@ -179,10 +190,12 @@ class _MainPageState extends State<MainPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      leading: const Icon(
-                        Icons.face,
-                        size: 26,
-                      ),
+                      // leading: const Icon(
+                      //   Icons.face,
+                      //   size: 26,
+                      // ),
+                      leading:
+                          Image.asset('assets/DressUp_images/$currentIcon.png'),
                       title: Text(
                         userDataList[index].userName,
                         style: const TextStyle(
@@ -231,67 +244,100 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Widget _drawerWidget(BuildContext context) {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Constant.lightBlueColor,
+  Widget _bottomSheetWidget(BuildContext context) {
+    return Container(
+      height: 400,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.settings, size: 36),
+              title: const Text('設定'),
+              onTap: () => null,
             ),
-            child: Text(
-              'デモ用メニュー',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
+            ListTile(
+              leading: Image.asset(
+                'assets/DressUp_images/normal_dack.png',
+                height: 36,
+              ),
+              title: const Text('きせかえ'),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DressUpPage(userID: userID),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.manage_accounts, size: 36),
+              title: const Text('デモ用メニュー'),
+              onTap: () => showModalBottomSheet(
+                context: context,
+                builder: (context) => _demoWidget(context),
               ),
             ),
-          ),
-          ListTile(
-              leading: const Icon(Icons.toggle_on_outlined),
-              title: const Text('スタートボタンを有効にする'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _demoWidget(BuildContext context) {
+    return Container(
+      height: 400,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            ListTile(
+                leading: const Icon(Icons.toggle_on_outlined),
+                title: const Text('スタートボタンを有効にする'),
+                onTap: () {
+                  Future(() async {
+                    await _loginDataDao.enableStart(groupID);
+                  });
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StartPage(),
+                    ),
+                  );
+                }),
+            ListTile(
+              leading: const Icon(Icons.switch_account),
+              title: const Text('デモ用のデータに移動する'),
               onTap: () {
-                Future(() async {
-                  await _loginDataDao.enableStart(groupID);
-                });
+                // TODO: デモデータ移動
+                _sharedPreferencesLogic.moveDemo();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (context) => const StartPage(),
                   ),
                 );
-              }),
-          ListTile(
-            leading: const Icon(Icons.switch_account),
-            title: const Text('デモ用のデータに移動する'),
-            onTap: () {
-              // TODO: デモデータ移動
-              _sharedPreferencesLogic.moveDemo();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const StartPage(),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.face,
+              },
             ),
-            title: const Text('新しくグループを作成する'),
-            onTap: () {
-              _sharedPreferencesLogic.deleteID();
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const StartPage(),
-                ),
-              );
-            },
-          ),
-        ],
+            ListTile(
+              leading: const Icon(
+                Icons.face,
+              ),
+              title: const Text('新しくグループを作成する'),
+              onTap: () {
+                _sharedPreferencesLogic.deleteID();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StartPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
