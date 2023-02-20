@@ -83,7 +83,7 @@ class _MainListPageState extends State<MainListPage> {
               ),
               ListTile(
                 leading: Image.asset(
-                  'assets/DressUp_images/normal_dack.png',
+                  'assets/DressUp_images/d_white/normal.png',
                   height: 36,
                 ),
                 title: const Text('きせかえ'),
@@ -165,18 +165,11 @@ class _MainListPageState extends State<MainListPage> {
               title: const Text('アイコン画像を追加する'),
               onTap: () async {
                 UserData myData = await _loginDataDao.fetchMyUserData(userID);
-                List<int> myIcons = myData.myIcons;
-                List<int> notMyIcons = [];
-                for (int i = 0; i < Constant.dressUp.length; i++) {
-                  // もしmyIconsにiがなかったらnotmyiconsに追加
-                  if (!myIcons.contains(i)) {
-                    notMyIcons.add(i);
-                  }
+                int index = _loginDataDao.randomIndex(myData.myIcons);
+                if (index == -1) {
+                  print('もう全部もってる');
+                  return;
                 }
-                print('not my icons: $notMyIcons');
-                var random = math.Random();
-                int index = notMyIcons[random.nextInt(notMyIcons.length - 1)];
-
                 _loginDataDao.addIcon(userID, index);
               },
             ),

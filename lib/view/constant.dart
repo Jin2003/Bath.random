@@ -17,16 +17,16 @@ class Constant {
 
   // アイコン画像名
   static const List<String> dressUp = [
-    'normal_dack',
-    'necktie_dack',
-    'ribbon_dack',
-    'crown_dack',
-    'swimmingring_dack',
-    'candy_dack',
-    'cookie_dack',
-    'note_dack',
-    'heart_dack',
-    'silkhat_dack',
+    'normal',
+    'necktie',
+    'ribbon',
+    'crown',
+    'swimmingRing',
+    'candy',
+    'cookie',
+    'note',
+    'heart',
+    'silkhat',
   ];
 
   // カード画像（裏面）

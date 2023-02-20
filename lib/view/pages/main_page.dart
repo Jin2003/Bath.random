@@ -181,8 +181,8 @@ class _MainPageState extends State<MainPage> {
                       //   Icons.face,
                       //   size: 26,
                       // ),
-                      leading:
-                          Image.asset('assets/DressUp_images/$currentIcon.png'),
+                      leading: Image.asset(
+                          'assets/DressUp_images/d_white/$currentIcon.png'),
                       title: Text(
                         userDataList![index].userName,
                         style: const TextStyle(

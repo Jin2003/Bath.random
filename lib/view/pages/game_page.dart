@@ -1,5 +1,10 @@
+import 'package:bath_random/logic/login_data_dao.dart';
+import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
+import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,7 +16,10 @@ class GamePage extends StatefulWidget {
 }
 
 class _GamePageState extends State<GamePage> {
+  late LoginDataDao _loginDataDao;
+  late SharedPreferencesLogic _sharedPreferencesLogic;
   int imageIndex = 0;
+  bool isPressed = false;
   List<String> backCards = [
     'cards_hazure',
     'cards_hazure',
@@ -28,6 +36,124 @@ class _GamePageState extends State<GamePage> {
     'cards_dack',
     'cards_dack',
   ];
+
+  // カードのあたりはずれのダイアログ
+  void delayDialog(bool isSucceed) {
+    String userID;
+    UserData myData;
+    var index;
+
+    if (!isSucceed) {
+      Future.delayed(
+        Duration(milliseconds: 500),
+        () {
+          showDialog(
+            context: context,
+            builder: (context) {
+              return const SimpleDialog(
+                title: CustomText(text: 'はずれ', fontSize: 20),
+              );
+            },
+          );
+        },
+      );
+    } else {
+      FutureBuilder(
+        future: _sharedPreferencesLogic.fetchID(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+          }
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          userID = snapshot.data! as String;
+
+          return FutureBuilder(
+            future: _loginDataDao.fetchMyUserData(userID),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              myData = snapshot.data!;
+              print('myData');
+              index = _loginDataDao.randomIndex(myData.myIcons);
+
+              if (index != -1) {
+                _loginDataDao.addIcon(userID, index);
+              }
+
+              if (index == -1) {
+                Future.delayed(
+                  Duration(milliseconds: 500),
+                  () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const SimpleDialog(
+                          title: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
+                        );
+                      },
+                    );
+                  },
+                );
+              } else {
+                Future.delayed(
+                  Duration(milliseconds: 500),
+                  () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return SimpleDialog(
+                          title:
+                              const CustomText(text: 'アイコンをゲット', fontSize: 20),
+                          children: [
+                            Image.asset(
+                              'assets/DressUp_images/${Constant.dressUp[index]}.png',
+                              height: 200,
+                            ),
+                            const CustomButton(
+                              title: 'メイン画面にもどる',
+                              width: 200,
+                              height: 45,
+                              nextPage: MainPage(),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              }
+            },
+          );
+        },
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    _loginDataDao = LoginDataDao();
+    _sharedPreferencesLogic = SharedPreferencesLogic();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +194,26 @@ class _GamePageState extends State<GamePage> {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: InkWell(
-        onTap: () {
-          setState(() {
-            backCards.shuffle();
+        onTap: isPressed
+            ? null
+            : () {
+                setState(() {
+                  backCards.shuffle();
 
-            imageIndex = index;
-            imageTitle[index] = backCards[index];
-          });
-        },
+                  imageIndex = index;
+                  imageTitle[index] = backCards[index];
+                  isPressed = true;
+
+                  // あたりがでたらshowDialog
+                  if (imageTitle[index] == 'cards_atari') {
+                    // TODO: ランダムで一つアイコンゲット
+                    // _loginDataDao.
+                    delayDialog(true);
+                  } else {
+                    delayDialog(false);
+                  }
+                });
+              },
         child: SizedBox(
           height: 145,
           width: 145,

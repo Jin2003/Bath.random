@@ -30,6 +30,7 @@ class _DressUpPageState extends State<DressUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: FutureBuilder(
         future: _fetchUserData,
         builder: (context, snapshot) {
@@ -75,7 +76,7 @@ class _DressUpPageState extends State<DressUpPage> {
                   ],
                 ),
                 _currentIconWidget(context),
-                const SizedBox(height: 40),
+                const SizedBox(height: 20),
                 const CustomText(text: 'コレクション', fontSize: 26),
                 const SizedBox(height: 20),
                 SizedBox(
@@ -92,7 +93,7 @@ class _DressUpPageState extends State<DressUpPage> {
 
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
-    return _oneImage(context, myUserData!.currentIcon, Colors.white, 160);
+    return _oneImage(context, myUserData!.currentIcon, 160);
   }
 
   // 自分の持っているアイコンだけのを表示
@@ -120,15 +121,14 @@ class _DressUpPageState extends State<DressUpPage> {
             // TODO: myIconsのみを表示（currentIcon以外）
             for (int i = 0; i < myIcons.length; i++)
               if (myIcons[i] != myUserData!.currentIcon)
-                _oneImage(context, myIcons[i], Constant.greyColor, 100),
+                _oneImage(context, myIcons[i], 100),
           ],
         ),
       ],
     );
   }
 
-  Widget _oneImage(
-      BuildContext context, int index, Color backColor, double size) {
+  Widget _oneImage(BuildContext context, int index, double size) {
     var icon = Constant.dressUp[index];
     return Padding(
       padding: const EdgeInsets.all(10.0),
@@ -142,7 +142,7 @@ class _DressUpPageState extends State<DressUpPage> {
                 title: const CustomText(text: 'このアイコンにしますか？', fontSize: 20),
                 children: [
                   Image.asset(
-                    'assets/DressUp_images/$icon.png',
+                    'assets/DressUp_images/d_white/$icon.png',
                     height: 200,
                   ),
                   Padding(
@@ -183,14 +183,10 @@ class _DressUpPageState extends State<DressUpPage> {
           height: size,
           width: size,
           decoration: BoxDecoration(
-            color: backColor,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            child: Image.asset(
-              'assets/DressUp_images/$icon.png',
-            ),
+          child: Image.asset(
+            'assets/DressUp_images/d_white/$icon.png',
           ),
         ),
       ),
