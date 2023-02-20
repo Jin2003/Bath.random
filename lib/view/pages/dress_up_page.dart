@@ -3,8 +3,9 @@ import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
-import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
+
+import '../../logic/navigate.dart';
 
 class DressUpPage extends StatefulWidget {
   String userID;
@@ -62,7 +63,7 @@ class _DressUpPageState extends State<DressUpPage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const MainPage(),
+                            builder: (context) => const Navigate(),
                           ),
                         );
                       },

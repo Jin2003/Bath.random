@@ -28,4 +28,14 @@ class Constant {
     'heart_dack',
     'silkhat_dack',
   ];
+
+  // カード画像（裏面）
+  static const List<String> backCard = [
+    'cards_hazure',
+    'cards_hazure',
+    'cards_hazure',
+    'cards_atari',
+    'cards_hazure',
+    'cards_hazure',
+  ];
 }
