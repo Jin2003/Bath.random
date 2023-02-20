@@ -196,32 +196,57 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             // ボタン部分
-            Padding(
-              padding: const EdgeInsets.all(60.0),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: Constant.lightGreyColor,
-                    backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-                    fixedSize: const Size(130, 45),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+            // Padding(
+            //   padding: const EdgeInsets.all(60.0),
+            //   child: Align(
+            //     alignment: Alignment(-0.9, 0.9),
+            //     child: OutlinedButton(
+            //       style: OutlinedButton.styleFrom(
+            //         foregroundColor: Constant.lightGreyColor,
+            //         backgroundColor: const Color.fromARGB(255, 255, 249, 249),
+            //         fixedSize: const Size(130, 45),
+            //         shape: RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //         ),
+            //         side: const BorderSide(color: Colors.white),
+            //         elevation: 3,
+            //       ),
+            //       onPressed: groupData.isSetOrder
+            //           ? null
+            //           : () async {
+            //               await shuffleOrder();
+            //               await _loginDataDao.startBath(groupID);
+            //             },
+            //       child: const Text('スタート',
+            //           style: TextStyle(
+            //             fontWeight: FontWeight.bold,
+            //             fontSize: 16,
+            //           )),
+            //     ),
+            //   ),
+            // ),
+
+            Align(
+              alignment: const Alignment(-0.9, 0.9),
+              child: InkWell(
+                onTap: (groupData.isSetOrder
+                    ? null
+                    : () async {
+                        await shuffleOrder();
+                        await _loginDataDao.startBath(groupID);
+                      }),
+                child: Container(
+                  width: 110,
+                  height: 110,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    image: const DecorationImage(
+                      image: AssetImage(
+                        'assets/parts/shuffle_button.png',
+                      ),
+                      fit: BoxFit.cover,
                     ),
-                    side: const BorderSide(color: Colors.white),
-                    elevation: 3,
                   ),
-                  onPressed: groupData.isSetOrder
-                      ? null
-                      : () async {
-                          await shuffleOrder();
-                          await _loginDataDao.startBath(groupID);
-                        },
-                  child: const Text('スタート',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      )),
                 ),
               ),
             ),
