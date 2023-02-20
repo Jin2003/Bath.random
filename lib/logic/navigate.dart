@@ -40,7 +40,7 @@ class _NavigateState extends State<Navigate> {
               icon: Icon(Icons.sports_esports), label: 'game'),
           NavigationDestination(icon: Icon(Icons.home), label: 'home'),
           NavigationDestination(
-              icon: Icon(Icons.format_list_bulleted), label: 'list'),
+              icon: Icon(Icons.format_list_bulleted), label: 'otther'),
         ],
       ),
       body: _selectPage[_selectedIndex],
