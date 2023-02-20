@@ -1,3 +1,4 @@
+import 'package:bath_random/view/pages/main_list_page.dart';
 import 'package:flutter/material.dart';
 import '../view/pages/game_page.dart';
 import '../view/pages/main_page.dart';
@@ -16,7 +17,7 @@ class _NavigateState extends State<Navigate> {
   static const _selectPage = [
     GamePage(),
     MainPage(),
-    GamePage(),
+    MainListPage(),
   ];
 
   @override

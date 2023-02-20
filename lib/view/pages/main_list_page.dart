@@ -67,53 +67,45 @@ class _MainListPageState extends State<MainListPage> {
   }
 
   Widget _listWidget(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.settings, size: 36),
-              title: const Text('設定'),
-              // ignore: avoid_returning_null_for_void
-              onTap: () => null,
-            ),
-            ListTile(
-              leading: Image.asset(
-                'assets/DressUp_images/normal_dack.png',
-                height: 36,
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: SizedBox(
+        height: 400,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.settings, size: 36),
+                title: const Text('設定'),
+                // ignore: avoid_returning_null_for_void
+                onTap: () => null,
               ),
-              title: const Text('きせかえ'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DressUpPage(userID: userID),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.manage_accounts, size: 36),
-              title: const Text('デモ用メニュー'),
-              onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => _demoWidget(context),
-              ),
-            ),
-            ListTile(
-                leading: const Icon(Icons.sports_esports, size: 36),
-                title: const Text('ゲーム'),
+              ListTile(
+                leading: Image.asset(
+                  'assets/DressUp_images/normal_dack.png',
+                  height: 36,
+                ),
+                title: const Text('きせかえ'),
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const GamePage(),
+                      builder: (context) => DressUpPage(userID: userID),
                     ),
                   );
-                })
-          ],
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.manage_accounts, size: 36),
+                title: const Text('デモ用メニュー'),
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) => _demoWidget(context),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
