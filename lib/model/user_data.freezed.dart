@@ -25,6 +25,8 @@ mixin _$UserData {
   String get userName => throw _privateConstructorUsedError;
   int get bathTime => throw _privateConstructorUsedError;
   int get order => throw _privateConstructorUsedError;
+  int get currentIcon => throw _privateConstructorUsedError;
+  List<int> get myIcons => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +44,9 @@ abstract class $UserDataCopyWith<$Res> {
       String userID,
       String userName,
       int bathTime,
-      int order});
+      int order,
+      int currentIcon,
+      List<int> myIcons});
 }
 
 /// @nodoc
@@ -63,6 +67,8 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
     Object? userName = null,
     Object? bathTime = null,
     Object? order = null,
+    Object? currentIcon = null,
+    Object? myIcons = null,
   }) {
     return _then(_value.copyWith(
       groupID: null == groupID
@@ -85,6 +91,14 @@ class _$UserDataCopyWithImpl<$Res, $Val extends UserData>
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int,
+      currentIcon: null == currentIcon
+          ? _value.currentIcon
+          : currentIcon // ignore: cast_nullable_to_non_nullable
+              as int,
+      myIcons: null == myIcons
+          ? _value.myIcons
+          : myIcons // ignore: cast_nullable_to_non_nullable
+              as List<int>,
     ) as $Val);
   }
 }
@@ -101,7 +115,9 @@ abstract class _$$_UserDataCopyWith<$Res> implements $UserDataCopyWith<$Res> {
       String userID,
       String userName,
       int bathTime,
-      int order});
+      int order,
+      int currentIcon,
+      List<int> myIcons});
 }
 
 /// @nodoc
@@ -120,6 +136,8 @@ class __$$_UserDataCopyWithImpl<$Res>
     Object? userName = null,
     Object? bathTime = null,
     Object? order = null,
+    Object? currentIcon = null,
+    Object? myIcons = null,
   }) {
     return _then(_$_UserData(
       groupID: null == groupID
@@ -142,6 +160,14 @@ class __$$_UserDataCopyWithImpl<$Res>
           ? _value.order
           : order // ignore: cast_nullable_to_non_nullable
               as int,
+      currentIcon: null == currentIcon
+          ? _value.currentIcon
+          : currentIcon // ignore: cast_nullable_to_non_nullable
+              as int,
+      myIcons: null == myIcons
+          ? _value._myIcons
+          : myIcons // ignore: cast_nullable_to_non_nullable
+              as List<int>,
     ));
   }
 }
@@ -154,7 +180,10 @@ class _$_UserData with DiagnosticableTreeMixin implements _UserData {
       required this.userID,
       required this.userName,
       required this.bathTime,
-      this.order = -1});
+      this.order = -1,
+      this.currentIcon = 0,
+      final List<int> myIcons = const [0]})
+      : _myIcons = myIcons;
 
   factory _$_UserData.fromJson(Map<String, dynamic> json) =>
       _$$_UserDataFromJson(json);
@@ -170,10 +199,21 @@ class _$_UserData with DiagnosticableTreeMixin implements _UserData {
   @override
   @JsonKey()
   final int order;
+  @override
+  @JsonKey()
+  final int currentIcon;
+  final List<int> _myIcons;
+  @override
+  @JsonKey()
+  List<int> get myIcons {
+    if (_myIcons is EqualUnmodifiableListView) return _myIcons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_myIcons);
+  }
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'UserData(groupID: $groupID, userID: $userID, userName: $userName, bathTime: $bathTime, order: $order)';
+    return 'UserData(groupID: $groupID, userID: $userID, userName: $userName, bathTime: $bathTime, order: $order, currentIcon: $currentIcon, myIcons: $myIcons)';
   }
 
   @override
@@ -185,7 +225,9 @@ class _$_UserData with DiagnosticableTreeMixin implements _UserData {
       ..add(DiagnosticsProperty('userID', userID))
       ..add(DiagnosticsProperty('userName', userName))
       ..add(DiagnosticsProperty('bathTime', bathTime))
-      ..add(DiagnosticsProperty('order', order));
+      ..add(DiagnosticsProperty('order', order))
+      ..add(DiagnosticsProperty('currentIcon', currentIcon))
+      ..add(DiagnosticsProperty('myIcons', myIcons));
   }
 
   @override
@@ -199,13 +241,23 @@ class _$_UserData with DiagnosticableTreeMixin implements _UserData {
                 other.userName == userName) &&
             (identical(other.bathTime, bathTime) ||
                 other.bathTime == bathTime) &&
-            (identical(other.order, order) || other.order == order));
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.currentIcon, currentIcon) ||
+                other.currentIcon == currentIcon) &&
+            const DeepCollectionEquality().equals(other._myIcons, _myIcons));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, groupID, userID, userName, bathTime, order);
+  int get hashCode => Object.hash(
+      runtimeType,
+      groupID,
+      userID,
+      userName,
+      bathTime,
+      order,
+      currentIcon,
+      const DeepCollectionEquality().hash(_myIcons));
 
   @JsonKey(ignore: true)
   @override
@@ -227,7 +279,9 @@ abstract class _UserData implements UserData {
       required final String userID,
       required final String userName,
       required final int bathTime,
-      final int order}) = _$_UserData;
+      final int order,
+      final int currentIcon,
+      final List<int> myIcons}) = _$_UserData;
 
   factory _UserData.fromJson(Map<String, dynamic> json) = _$_UserData.fromJson;
 
@@ -241,6 +295,10 @@ abstract class _UserData implements UserData {
   int get bathTime;
   @override
   int get order;
+  @override
+  int get currentIcon;
+  @override
+  List<int> get myIcons;
   @override
   @JsonKey(ignore: true)
   _$$_UserDataCopyWith<_$_UserData> get copyWith =>

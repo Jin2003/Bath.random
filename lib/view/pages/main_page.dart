@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:bath_random/logic/login_data_dao.dart';
 import 'package:bath_random/logic/shared_preferences.dart';
@@ -25,15 +26,15 @@ class _MainPageState extends State<MainPage> {
   String userID = "";
   String groupID = "";
   DateTime? groupStartTime;
+  List<UserData>? userDataList;
 
   // 全員の順番をシャッフルする処理
   Future shuffleOrder() async {
-    List<UserData> userDataList = await _loginDataDao.fetchUserData(groupID);
-    print('userDataList: $userDataList');
+    print('いまからシャッフル: $userDataList');
 
-    userDataList.shuffle();
+    userDataList!.shuffle();
 
-    _loginDataDao.shuffleData(userDataList);
+    _loginDataDao.shuffleData(userDataList!);
     _loginDataDao.disabledStart(groupID);
   }
 
@@ -81,7 +82,6 @@ class _MainPageState extends State<MainPage> {
           elevation: 0,
         ),
       ),
-      // endDrawer: _drawerWidget(context),
 
       // IDの取得処理完了後、リスト表示に移行
       body: FutureBuilder(
@@ -132,7 +132,7 @@ class _MainPageState extends State<MainPage> {
 
   // リスト表示部分のウィジェット
   Widget _listWidget(BuildContext context, GroupData groupData) {
-    List<UserData> userDataList;
+    // List<UserData> userDataList;
     dynamic passTime;
 
     return StreamBuilder(
@@ -146,7 +146,7 @@ class _MainPageState extends State<MainPage> {
         }
 
         userDataList = snapshot.data!;
-        userDataList.sort(
+        userDataList!.sort(
           (a, b) => a.order.compareTo(b.order),
         );
         print(userDataList);
@@ -155,11 +155,12 @@ class _MainPageState extends State<MainPage> {
           children: [
             // リスト部分
             ListView.builder(
-              itemCount: userDataList.length,
+              itemCount: userDataList!.length,
               itemBuilder: (context, index) {
                 Widget? bathTimeWidget;
-                // TODO:currentIconに変更
-                String currentIcon = Constant.dressUp[index];
+                // アイコンの設定
+                String currentIcon =
+                    Constant.dressUp[userDataList![index].currentIcon];
 
                 if (groupData.isSetOrder) {
                   if (index == 0) {
@@ -168,10 +169,10 @@ class _MainPageState extends State<MainPage> {
                   var startTime = passTime
                       .add(const Duration(minutes: Constant.intervalTime));
                   var endTime = startTime
-                      .add(Duration(minutes: userDataList[index].bathTime));
+                      .add(Duration(minutes: userDataList![index].bathTime));
                   // TODO: 自分のはいる時間をfirestoreに登録
-                  // _loginDataDao.setMyStartTime(
-                  //     userDataList[index].userID, startTime);
+                  _loginDataDao.setMyStartTime(
+                      userDataList![index].userID, startTime);
                   passTime = endTime;
 
                   bathTimeWidget = Text(
@@ -197,11 +198,11 @@ class _MainPageState extends State<MainPage> {
                       leading:
                           Image.asset('assets/DressUp_images/$currentIcon.png'),
                       title: Text(
-                        userDataList[index].userName,
+                        userDataList![index].userName,
                         style: const TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 17),
                       ),
-                      trailing: Text("${userDataList[index].bathTime}min"),
+                      trailing: Text("${userDataList![index].bathTime}min"),
                       subtitle: bathTimeWidget,
                     ),
                   ),
@@ -311,7 +312,7 @@ class _MainPageState extends State<MainPage> {
               leading: const Icon(Icons.switch_account),
               title: const Text('デモ用のデータに移動する'),
               onTap: () {
-                // TODO: デモデータ移動
+                // デモデータ移動
                 _sharedPreferencesLogic.moveDemo();
                 Navigator.push(
                   context,
@@ -322,9 +323,7 @@ class _MainPageState extends State<MainPage> {
               },
             ),
             ListTile(
-              leading: const Icon(
-                Icons.face,
-              ),
+              leading: const Icon(Icons.face),
               title: const Text('新しくグループを作成する'),
               onTap: () {
                 _sharedPreferencesLogic.deleteID();
@@ -334,6 +333,28 @@ class _MainPageState extends State<MainPage> {
                     builder: (context) => const StartPage(),
                   ),
                 );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.add_to_photos),
+              title: const Text('アイコン画像を追加する'),
+              onTap: () async {
+                print('アイコンを追加: $userDataList');
+
+                UserData myData = await _loginDataDao.fetchMyUserData(userID);
+                List<int> myIcons = myData.myIcons;
+                List<int> notMyIcons = [];
+                for (int i = 0; i < Constant.dressUp.length; i++) {
+                  // もしmyIconsにiがなかったらnotmyiconsに追加
+                  if (!myIcons.contains(i)) {
+                    notMyIcons.add(i);
+                  }
+                }
+                print('not my icons: $notMyIcons');
+                var random = math.Random();
+                int index = notMyIcons[random.nextInt(notMyIcons.length - 1)];
+
+                _loginDataDao.addIcon(userID, index);
               },
             ),
           ],

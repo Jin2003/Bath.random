@@ -12,6 +12,8 @@ class UserData with _$UserData {
     required String userName,
     required int bathTime,
     @Default(-1) int order,
+    @Default(0) int currentIcon,
+    @Default([0]) List<int> myIcons,
   }) = _UserData;
 
   factory UserData.fromJson(Map<String, dynamic> json) =>

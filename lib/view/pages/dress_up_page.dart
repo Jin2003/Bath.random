@@ -1,5 +1,7 @@
 import 'package:bath_random/logic/login_data_dao.dart';
+import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
+import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
@@ -14,71 +16,110 @@ class DressUpPage extends StatefulWidget {
 
 class _DressUpPageState extends State<DressUpPage> {
   late LoginDataDao _loginDataDao;
+  UserData? myUserData;
+  Future<UserData>? _fetchUserData;
 
   @override
   void initState() {
     _loginDataDao = LoginDataDao();
+    _fetchUserData = _loginDataDao.fetchMyUserData(widget.userID);
     super.initState();
   }
-
-  // TODO: fetchMyUserData(userID)でアイコンデータを取得
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+      body: FutureBuilder(
+        future: _fetchUserData,
+        builder: (context, snapshot) {
+          // 通信中
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          }
+          // エラー発生時
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          // データ取得失敗
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          myUserData = snapshot.data!;
+          print('myUserData: $myUserData');
+
+          return SafeArea(
+            child: Column(
               children: [
-                const SizedBox(width: 30),
-                IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainPage(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(width: 30),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const MainPage(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.clear,
+                        size: 40,
                       ),
-                    );
-                  },
-                  icon: const Icon(
-                    Icons.clear,
-                    size: 40,
-                  ),
+                    ),
+                  ],
+                ),
+                _currentIconWidget(context),
+                const SizedBox(height: 40),
+                const CustomText(text: 'コレクション', fontSize: 26),
+                const SizedBox(height: 20),
+                SizedBox(
+                  height: 420,
+                  child: _myIconsWidget(context),
                 ),
               ],
             ),
-            _currentIconWidget(context),
-            const SizedBox(height: 40),
-            const CustomText(text: 'コレクション', fontSize: 26),
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 420,
-              child: _myIconsWidget(context),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
-    // TODO: currentIconを表示
-    return _oneImage(context, 0, Colors.white, 160);
+    return _oneImage(context, myUserData!.currentIcon, Colors.white, 160);
   }
 
   // 自分の持っているアイコンだけのを表示
   Widget _myIconsWidget(BuildContext context) {
+    List<int> myIcons = myUserData!.myIcons;
+
+    if (myIcons.length == 1) {
+      print('no icons');
+      return Column(
+        children: const [
+          SizedBox(height: 60),
+          CustomText(
+            text: 'きせかえをもっていません',
+            fontSize: 24,
+          ),
+        ],
+      );
+    }
+
     return ListView(
       children: [
         Wrap(
           alignment: WrapAlignment.spaceAround,
           children: [
             // TODO: myIconsのみを表示（currentIcon以外）
-            for (int i = 1; i < Constant.dressUp.length; i++)
-              _oneImage(context, i, Constant.greyColor, 100),
+            for (int i = 0; i < myIcons.length; i++)
+              if (myIcons[i] != myUserData!.currentIcon)
+                _oneImage(context, myIcons[i], Constant.greyColor, 100),
           ],
         ),
       ],
@@ -91,9 +132,51 @@ class _DressUpPageState extends State<DressUpPage> {
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: InkWell(
-        onTap: () async {
-          // TODO: 押されたindexの画像をcurrentIconに変更する
-          // await _loginDataDao.setCurrentIcon(widget.userID, index);
+        onTap: () {
+          // 「このアイコンにしますか？」のダイアログ
+          showDialog(
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                title: const CustomText(text: 'このアイコンにしますか？', fontSize: 20),
+                children: [
+                  Image.asset(
+                    'assets/DressUp_images/$icon.png',
+                    height: 200,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        CustomButton(
+                          title: 'はい',
+                          width: 200,
+                          height: 45,
+                          onPressed: () async {
+                            print('$index 番目にへんこう');
+                            await _loginDataDao.setCurrentIcon(
+                                widget.userID, index);
+                            setState(() {
+                              _fetchUserData =
+                                  _loginDataDao.fetchMyUserData(widget.userID);
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        CustomButton(
+                          title: 'いいえ',
+                          width: 200,
+                          height: 45,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
         },
         child: Container(
           height: size,

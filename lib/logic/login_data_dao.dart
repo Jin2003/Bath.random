@@ -149,17 +149,18 @@ class LoginDataDao {
     });
   }
 
-  // TODO: index番目の画像をcurrentIconに変更する
+  // currentIconを変更する
   Future<void> setCurrentIcon(String userID, int index) async {
     await _userColloction.doc(userID).update({
       'currentIcon': index,
     });
+    print('currentIcon 変更 : to $index');
   }
 
   // TODO: index番目の画像をmyIconsに追加する
   Future<void> addIcon(String userID, int index) async {
     await _userColloction.doc(userID).update({
-      'currentIcon': FieldValue.arrayUnion([index]),
+      'myIcons': FieldValue.arrayUnion([index]),
     });
   }
 }

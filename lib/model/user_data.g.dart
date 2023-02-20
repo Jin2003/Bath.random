@@ -12,6 +12,10 @@ _$_UserData _$$_UserDataFromJson(Map<String, dynamic> json) => _$_UserData(
       userName: json['userName'] as String,
       bathTime: json['bathTime'] as int,
       order: json['order'] as int? ?? -1,
+      currentIcon: json['currentIcon'] as int? ?? 0,
+      myIcons:
+          (json['myIcons'] as List<dynamic>?)?.map((e) => e as int).toList() ??
+              const [0],
     );
 
 Map<String, dynamic> _$$_UserDataToJson(_$_UserData instance) =>
@@ -21,4 +25,6 @@ Map<String, dynamic> _$$_UserDataToJson(_$_UserData instance) =>
       'userName': instance.userName,
       'bathTime': instance.bathTime,
       'order': instance.order,
+      'currentIcon': instance.currentIcon,
+      'myIcons': instance.myIcons,
     };

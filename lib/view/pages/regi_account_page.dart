@@ -33,6 +33,8 @@ class _RegiAccountPageState extends State<RegiAccountPage> {
       'userName': userNameController.text,
       'bathTime': int.parse(bathTimeController.text),
       'order': 0,
+      'currentIcon': 0,
+      'myIcons': [0],
     });
     // ローカルにIDを保存
     final SharedPreferences prefs = await SharedPreferences.getInstance();
