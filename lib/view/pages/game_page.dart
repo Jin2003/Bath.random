@@ -20,6 +20,10 @@ class _GamePageState extends State<GamePage> {
   late SharedPreferencesLogic _sharedPreferencesLogic;
   int imageIndex = 0;
   bool isPressed = false;
+
+  String? userID;
+  UserData? myData;
+  var index;
   List<String> backCards = [
     'cards_hazure',
     'cards_hazure',
@@ -39,10 +43,6 @@ class _GamePageState extends State<GamePage> {
 
   // カードのあたりはずれのダイアログ
   void delayDialog(bool isSucceed) {
-    String userID;
-    UserData myData;
-    var index;
-
     if (!isSucceed) {
       Future.delayed(
         Duration(milliseconds: 500),
@@ -58,92 +58,47 @@ class _GamePageState extends State<GamePage> {
         },
       );
     } else {
-      FutureBuilder(
-        future: _sharedPreferencesLogic.fetchID(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const CircularProgressIndicator();
-          }
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
-          }
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
+      if (index == -1) {
+        Future.delayed(
+          Duration(milliseconds: 500),
+          () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return const SimpleDialog(
+                  title: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
+                );
+              },
             );
-          }
-
-          userID = snapshot.data! as String;
-
-          return FutureBuilder(
-            future: _loginDataDao.fetchMyUserData(userID),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const CircularProgressIndicator();
-              }
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
+          },
+        );
+      } else {
+        Future.delayed(
+          Duration(milliseconds: 500),
+          () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return SimpleDialog(
+                  title: const CustomText(text: 'アイコンをゲット', fontSize: 20),
+                  children: [
+                    Image.asset(
+                      'assets/DressUp_images/${Constant.dressUp[index]}.png',
+                      height: 200,
+                    ),
+                    const CustomButton(
+                      title: 'メイン画面にもどる',
+                      width: 200,
+                      height: 45,
+                      nextPage: MainPage(),
+                    ),
+                  ],
                 );
-              }
-
-              myData = snapshot.data!;
-              print('myData');
-              index = _loginDataDao.randomIndex(myData.myIcons);
-
-              if (index != -1) {
-                _loginDataDao.addIcon(userID, index);
-              }
-
-              if (index == -1) {
-                Future.delayed(
-                  Duration(milliseconds: 500),
-                  () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return const SimpleDialog(
-                          title: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
-                        );
-                      },
-                    );
-                  },
-                );
-              } else {
-                Future.delayed(
-                  Duration(milliseconds: 500),
-                  () {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SimpleDialog(
-                          title:
-                              const CustomText(text: 'アイコンをゲット', fontSize: 20),
-                          children: [
-                            Image.asset(
-                              'assets/DressUp_images/${Constant.dressUp[index]}.png',
-                              height: 200,
-                            ),
-                            const CustomButton(
-                              title: 'メイン画面にもどる',
-                              width: 200,
-                              height: 45,
-                              nextPage: MainPage(),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                );
-              }
-            },
-          );
-        },
-      );
+              },
+            );
+          },
+        );
+      }
     }
   }
 
@@ -170,22 +125,66 @@ class _GamePageState extends State<GamePage> {
           elevation: 0,
         ),
       ),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
-              const SizedBox(height: 10),
-              Wrap(
-                alignment: WrapAlignment.center,
-                children: [
-                  for (int i = 0; i < 6; i++) _cardWidget(context, i),
-                ],
-              ),
-            ],
-          ),
-        ),
+      body: FutureBuilder(
+        future: _sharedPreferencesLogic.fetchID(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const CircularProgressIndicator();
+          }
+          if (snapshot.hasError) {
+            return Text(snapshot.error.toString());
+          }
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          userID = snapshot.data!['userID'] as String;
+
+          return FutureBuilder(
+            future: _loginDataDao.fetchMyUserData(userID!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const CircularProgressIndicator();
+              }
+              if (snapshot.hasError) {
+                return Text(snapshot.error.toString());
+              }
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              myData = snapshot.data!;
+              print('myData : $myData');
+              index = _loginDataDao.randomIndex(myData!.myIcons);
+
+              if (index != -1) {
+                _loginDataDao.addIcon(userID!, index);
+              }
+
+              return SafeArea(
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (int i = 0; i < 6; i++) _cardWidget(context, i),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }
