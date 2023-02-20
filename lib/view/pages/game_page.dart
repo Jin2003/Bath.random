@@ -12,6 +12,8 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   int imageIndex = 0;
+  List backCards = [];
+  String imageTitle = 'cards_dack';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
