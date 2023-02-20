@@ -160,7 +160,7 @@ class LoginDataDao {
     print('currentIcon 変更 : to $index');
   }
 
-  // TODO: index番目の画像をmyIconsに追加する
+  // index番目の画像をmyIconsに追加する
   Future<void> addIcon(String userID, int index) async {
     await _userColloction.doc(userID).update({
       'myIcons': FieldValue.arrayUnion([index]),
