@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:bath_random/logic/login_data_dao.dart';
 import 'package:bath_random/logic/shared_preferences.dart';
@@ -64,20 +63,6 @@ class _MainPageState extends State<MainPage> {
             ),
           ),
           centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                // return _scaffoldKey.currentState!.openEndDrawer();
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    return _bottomSheetWidget(context);
-                  },
-                );
-              },
-              icon: const Icon(Icons.dehaze_rounded),
-            ),
-          ],
           automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           elevation: 0,
@@ -243,136 +228,6 @@ class _MainPageState extends State<MainPage> {
           ],
         );
       },
-    );
-  }
-
-  Widget _bottomSheetWidget(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.settings, size: 36),
-              title: const Text('設定'),
-              // ignore: avoid_returning_null_for_void
-              onTap: () => null,
-            ),
-            ListTile(
-              leading: Image.asset(
-                'assets/DressUp_images/normal_dack.png',
-                height: 36,
-              ),
-              title: const Text('きせかえ'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => DressUpPage(userID: userID),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.manage_accounts, size: 36),
-              title: const Text('デモ用メニュー'),
-              onTap: () => showModalBottomSheet(
-                context: context,
-                builder: (context) => _demoWidget(context),
-              ),
-            ),
-            ListTile(
-                leading: const Icon(Icons.sports_esports, size: 36),
-                title: const Text('ゲーム'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const GamePage(),
-                    ),
-                  );
-                })
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _demoWidget(BuildContext context) {
-    return SizedBox(
-      height: 400,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            ListTile(
-                leading: const Icon(Icons.toggle_on_outlined),
-                title: const Text('スタートボタンを有効にする'),
-                onTap: () {
-                  Future(() async {
-                    await _loginDataDao.enableStart(groupID);
-                  });
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const StartPage(),
-                    ),
-                  );
-                }),
-            ListTile(
-              leading: const Icon(Icons.switch_account),
-              title: const Text('デモ用のデータに移動する'),
-              onTap: () {
-                // デモデータ移動
-                _sharedPreferencesLogic.moveDemo();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StartPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.face),
-              title: const Text('新しくグループを作成する'),
-              onTap: () {
-                _sharedPreferencesLogic.deleteID();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const StartPage(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.add_to_photos),
-              title: const Text('アイコン画像を追加する'),
-              onTap: () async {
-                print('アイコンを追加: $userDataList');
-
-                UserData myData = await _loginDataDao.fetchMyUserData(userID);
-                List<int> myIcons = myData.myIcons;
-                List<int> notMyIcons = [];
-                for (int i = 0; i < Constant.dressUp.length; i++) {
-                  // もしmyIconsにiがなかったらnotmyiconsに追加
-                  if (!myIcons.contains(i)) {
-                    notMyIcons.add(i);
-                  }
-                }
-                print('not my icons: $notMyIcons');
-                var random = math.Random();
-                int index = notMyIcons[random.nextInt(notMyIcons.length - 1)];
-
-                _loginDataDao.addIcon(userID, index);
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
