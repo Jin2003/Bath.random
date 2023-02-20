@@ -10,6 +10,7 @@ import 'package:bath_random/view/pages/start_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'game_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -245,7 +246,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _bottomSheetWidget(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -254,6 +255,7 @@ class _MainPageState extends State<MainPage> {
             ListTile(
               leading: const Icon(Icons.settings, size: 36),
               title: const Text('設定'),
+              // ignore: avoid_returning_null_for_void
               onTap: () => null,
             ),
             ListTile(
@@ -279,6 +281,17 @@ class _MainPageState extends State<MainPage> {
                 builder: (context) => _demoWidget(context),
               ),
             ),
+            ListTile(
+                leading: const Icon(Icons.sports_esports, size: 36),
+                title: const Text('ゲーム'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const GamePage(),
+                    ),
+                  );
+                })
           ],
         ),
       ),
@@ -286,7 +299,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Widget _demoWidget(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400,
       child: Padding(
         padding: const EdgeInsets.all(20.0),

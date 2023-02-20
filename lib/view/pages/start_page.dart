@@ -1,8 +1,9 @@
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/group_select_page.dart';
-import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../logic/navigate.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -41,7 +42,7 @@ class _StartPageState extends State<StartPage> {
             return _logoWidget(context, 'グループ登録へ', const GroupSelectPage());
           } else {
             // 登録があった場合
-            return _logoWidget(context, 'メインページへ', const MainPage());
+            return _logoWidget(context, 'メインページへ', const Navigate());
           }
         }
         return _logoWidget(context, 'no data', null);
