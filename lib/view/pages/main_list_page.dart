@@ -1,17 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:bath_random/logic/login_data_dao.dart';
 import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/view/pages/dress_up_page.dart';
-import 'package:bath_random/view/pages/game_page.dart';
 import 'package:bath_random/view/pages/start_page.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-
 import '../../model/user_data.dart';
-import '../constant.dart';
 
 class MainListPage extends StatefulWidget {
   const MainListPage({super.key});
@@ -158,19 +151,6 @@ class _MainListPageState extends State<MainListPage> {
                     builder: (context) => const StartPage(),
                   ),
                 );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.add_to_photos),
-              title: const Text('アイコン画像を追加する'),
-              onTap: () async {
-                UserData myData = await _loginDataDao.fetchMyUserData(userID);
-                int index = _loginDataDao.randomIndex(myData.myIcons);
-                if (index == -1) {
-                  print('もう全部もってる');
-                  return;
-                }
-                _loginDataDao.addIcon(userID, index);
               },
             ),
           ],
