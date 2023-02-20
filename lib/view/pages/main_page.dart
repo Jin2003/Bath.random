@@ -130,7 +130,6 @@ class _MainPageState extends State<MainPage> {
         if (!snapshot.hasData) {
           return const Text('error: NO DATA');
         }
-
         userDataList = snapshot.data!;
         userDataList!.sort(
           (a, b) => a.order.compareTo(b.order),
@@ -139,95 +138,74 @@ class _MainPageState extends State<MainPage> {
 
         return Stack(
           children: [
+            Container(
+              child: Image.asset('assets/parts/appbar.png'),
+            ),
+            Container(
+              alignment: Alignment.bottomCenter,
+              child: Image.asset('assets/parts/bottom_navigation_bar.png'),
+            ),
             // リスト部分
-            ListView.builder(
-              itemCount: userDataList!.length,
-              itemBuilder: (context, index) {
-                Widget? bathTimeWidget;
-                // アイコンの設定
-                String currentIcon =
-                    Constant.dressUp[userDataList![index].currentIcon];
+            Padding(
+              padding: const EdgeInsets.only(top: 45),
+              child: ListView.builder(
+                itemCount: userDataList!.length,
+                itemBuilder: (context, index) {
+                  Widget? bathTimeWidget;
+                  // アイコンの設定
+                  String currentIcon =
+                      Constant.dressUp[userDataList![index].currentIcon];
 
-                if (groupData.isSetOrder) {
-                  if (index == 0) {
-                    passTime = groupData.groupStartTime!.toDate();
+                  if (groupData.isSetOrder) {
+                    if (index == 0) {
+                      passTime = groupData.groupStartTime!.toDate();
+                    }
+                    var startTime = passTime
+                        .add(const Duration(minutes: Constant.intervalTime));
+                    var endTime = startTime
+                        .add(Duration(minutes: userDataList![index].bathTime));
+                    // TODO: 自分のはいる時間をfirestoreに登録
+                    _loginDataDao.setMyStartTime(
+                        userDataList![index].userID, startTime);
+                    passTime = endTime;
+                    bathTimeWidget = Text(
+                        DateFormat('HH:mm - ').format(startTime) +
+                            DateFormat('HH:mm').format(endTime));
                   }
-                  var startTime = passTime
-                      .add(const Duration(minutes: Constant.intervalTime));
-                  var endTime = startTime
-                      .add(Duration(minutes: userDataList![index].bathTime));
-                  // TODO: 自分のはいる時間をfirestoreに登録
-                  _loginDataDao.setMyStartTime(
-                      userDataList![index].userID, startTime);
-                  passTime = endTime;
 
-                  bathTimeWidget = Text(
-                      DateFormat('HH:mm - ').format(startTime) +
-                          DateFormat('HH:mm').format(endTime));
-                }
-
-                return SizedBox(
-                  height: 100,
-                  child: Card(
-                    color: Colors.white, // Card自体の色
-                    margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-                    elevation: 10,
-                    shadowColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: ListTile(
-                      // leading: const Icon(
-                      //   Icons.face,
-                      //   size: 26,
-                      // ),
-                      leading: Image.asset(
-                          'assets/DressUp_images/d_white/$currentIcon.png'),
-                      title: Text(
-                        userDataList![index].userName,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 17),
+                  return SizedBox(
+                    height: 100,
+                    child: Card(
+                      color: Colors.white, // Card自体の色
+                      margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                      elevation: 10,
+                      shadowColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
-                      trailing: Text("${userDataList![index].bathTime}min"),
-                      subtitle: bathTimeWidget,
+                      child: ListTile(
+                        // leading: const Icon(
+                        //   Icons.face,
+                        //   size: 26,
+                        // ),
+                        leading: Image.asset(
+                            'assets/DressUp_images/d_white/$currentIcon.png'),
+                        title: Text(
+                          userDataList![index].userName,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w400, fontSize: 17),
+                        ),
+                        trailing: Text("${userDataList![index].bathTime}min"),
+                        subtitle: bathTimeWidget,
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             // ボタン部分
-            // Padding(
-            //   padding: const EdgeInsets.all(60.0),
-            //   child: Align(
-            //     alignment: Alignment(-0.9, 0.9),
-            //     child: OutlinedButton(
-            //       style: OutlinedButton.styleFrom(
-            //         foregroundColor: Constant.lightGreyColor,
-            //         backgroundColor: const Color.fromARGB(255, 255, 249, 249),
-            //         fixedSize: const Size(130, 45),
-            //         shape: RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(10),
-            //         ),
-            //         side: const BorderSide(color: Colors.white),
-            //         elevation: 3,
-            //       ),
-            //       onPressed: groupData.isSetOrder
-            //           ? null
-            //           : () async {
-            //               await shuffleOrder();
-            //               await _loginDataDao.startBath(groupID);
-            //             },
-            //       child: const Text('スタート',
-            //           style: TextStyle(
-            //             fontWeight: FontWeight.bold,
-            //             fontSize: 16,
-            //           )),
-            //     ),
-            //   ),
-            // ),
-
             Align(
-              alignment: const Alignment(-0.9, 0.9),
+              alignment: const Alignment(-0.9, 1.0),
               child: InkWell(
                 onTap: (groupData.isSetOrder
                     ? null

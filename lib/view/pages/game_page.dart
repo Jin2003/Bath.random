@@ -165,22 +165,34 @@ class _GamePageState extends State<GamePage> {
                 _loginDataDao.addIcon(userID!, index);
               }
 
-              return SafeArea(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        alignment: WrapAlignment.center,
+              return Stack(
+                children: [
+                  Image.asset('assets/parts/appbar.png'),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          for (int i = 0; i < 6; i++) _cardWidget(context, i),
+                          const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
+                          const SizedBox(height: 10),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              for (int i = 0; i < 6; i++)
+                                _cardWidget(context, i),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  Container(
+                    alignment: Alignment.bottomCenter,
+                    child:
+                        Image.asset('assets/parts/bottom_navigation_bar.png'),
+                  ),
+                ],
               );
             },
           );
@@ -191,7 +203,7 @@ class _GamePageState extends State<GamePage> {
 
   Widget _cardWidget(BuildContext context, int index) {
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(3.0),
       child: InkWell(
         onTap: isPressed
             ? null
@@ -217,7 +229,7 @@ class _GamePageState extends State<GamePage> {
           height: 145,
           width: 145,
           child: Container(
-              margin: const EdgeInsets.all(5),
+              margin: const EdgeInsets.all(8),
               child: Image.asset('assets/cards/${imageTitle[index]}.png')),
         ),
       ),
