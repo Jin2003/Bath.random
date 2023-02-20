@@ -12,8 +12,22 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   int imageIndex = 0;
-  List backCards = [];
-  String imageTitle = 'cards_dack';
+  List<String> backCards = [
+    'cards_hazure',
+    'cards_hazure',
+    'cards_hazure',
+    'cards_atari',
+    'cards_hazure',
+    'cards_hazure',
+  ];
+  List<String> imageTitle = [
+    'cards_dack',
+    'cards_dack',
+    'cards_dack',
+    'cards_dack',
+    'cards_dack',
+    'cards_dack',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,28 +54,34 @@ class _GamePageState extends State<GamePage> {
               Wrap(
                 alignment: WrapAlignment.center,
                 children: [
-                  for (int i = 0; i < 6; i++)
-                    Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: InkWell(
-                        onTap: () async {
-                          //
-                          Constant.backCard.shuffle();
-                        },
-                        child: SizedBox(
-                          height: 145,
-                          width: 145,
-                          child: Container(
-                              margin: const EdgeInsets.all(5),
-                              child:
-                                  Image.asset('assets/cards/cards_dack.png')),
-                        ),
-                      ),
-                    )
+                  for (int i = 0; i < 6; i++) _cardWidget(context, i),
                 ],
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _cardWidget(BuildContext context, int index) {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            backCards.shuffle();
+
+            imageIndex = index;
+            imageTitle[index] = backCards[index];
+          });
+        },
+        child: SizedBox(
+          height: 145,
+          width: 145,
+          child: Container(
+              margin: const EdgeInsets.all(5),
+              child: Image.asset('assets/cards/${imageTitle[index]}.png')),
         ),
       ),
     );
