@@ -93,12 +93,19 @@ class _DressUpPageState extends State<DressUpPage> {
 
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
-    return _oneImage(context, myUserData!.currentIcon, 160);
+    return _dackImage(context, myUserData!.currentIcon, 160);
   }
 
   // 自分の持っているアイコンだけのを表示
   Widget _myIconsWidget(BuildContext context) {
     List<int> myIcons = myUserData!.myIcons;
+    List<int> notMyIcons = [];
+    for (int i = 0; i < Constant.dressUp.length; i++) {
+      if (!myIcons.contains(i)) {
+        notMyIcons.add(i);
+      }
+      notMyIcons.remove(myUserData!.currentIcon);
+    }
 
     if (myIcons.length == 1) {
       print('no icons');
@@ -118,66 +125,25 @@ class _DressUpPageState extends State<DressUpPage> {
         Wrap(
           alignment: WrapAlignment.spaceAround,
           children: [
-            // TODO: myIconsのみを表示（currentIcon以外）
+            // myIconsのみを表示（currentIcon以外）
             for (int i = 0; i < myIcons.length; i++)
               if (myIcons[i] != myUserData!.currentIcon)
-                _oneImage(context, myIcons[i], 100),
+                _dackImage(context, myIcons[i], 100),
+            for (int i = 0; i < notMyIcons.length; i++)
+              _secretImage(context, notMyIcons[i], 100),
           ],
         ),
       ],
     );
   }
 
-  Widget _oneImage(BuildContext context, int index, double size) {
+  Widget _dackImage(BuildContext context, int index, double size) {
     var icon = Constant.dressUp[index];
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: InkWell(
         onTap: () {
-          // 「このアイコンにしますか？」のダイアログ
-          showDialog(
-            context: context,
-            builder: (context) {
-              return SimpleDialog(
-                title: const CustomText(text: 'このアイコンにしますか？', fontSize: 20),
-                children: [
-                  Image.asset(
-                    'assets/DressUp_images/d_white/$icon.png',
-                    height: 200,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        CustomButton(
-                          title: 'はい',
-                          width: 200,
-                          height: 45,
-                          onPressed: () async {
-                            print('$index 番目にへんこう');
-                            await _loginDataDao.setCurrentIcon(
-                                widget.userID, index);
-                            setState(() {
-                              _fetchUserData =
-                                  _loginDataDao.fetchMyUserData(widget.userID);
-                            });
-                            Navigator.pop(context);
-                          },
-                        ),
-                        const SizedBox(height: 10),
-                        CustomButton(
-                          title: 'いいえ',
-                          width: 200,
-                          height: 45,
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
+          _checkDialog(index);
         },
         child: Container(
           height: size,
@@ -190,6 +156,71 @@ class _DressUpPageState extends State<DressUpPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _secretImage(BuildContext context, int index, double size) {
+    var icon = Constant.dressUp[index];
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: InkWell(
+        child: Container(
+          height: size,
+          width: size,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Image.asset(
+            'assets/DressUp_images/d_secret/$icon.png',
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _checkDialog(int index) {
+    // 「このアイコンにしますか？」のダイアログ
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SimpleDialog(
+          title: const CustomText(text: 'このアイコンにしますか？', fontSize: 20),
+          children: [
+            Image.asset(
+              'assets/DressUp_images/d_white/${Constant.dressUp[index]}.png',
+              height: 200,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  CustomButton(
+                    title: 'はい',
+                    width: 200,
+                    height: 45,
+                    onPressed: () async {
+                      print('$index 番目にへんこう');
+                      await _loginDataDao.setCurrentIcon(widget.userID, index);
+                      setState(() {
+                        _fetchUserData =
+                            _loginDataDao.fetchMyUserData(widget.userID);
+                      });
+                      Navigator.pop(context);
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  CustomButton(
+                    title: 'いいえ',
+                    width: 200,
+                    height: 45,
+                    onPressed: () => Navigator.pop(context),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

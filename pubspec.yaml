@@ -93,7 +93,7 @@ flutter:
     - assets/
     - assets/cards/
     - assets/DressUp_images/
-    - assets/DressUp_images/d_seacret/
+    - assets/DressUp_images/d_secret/
     - assets/DressUp_images/d_white/
     - assets/parts/
   #  - images/a_dot_ham.jpeg
