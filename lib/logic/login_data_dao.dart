@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:bath_random/model/group_data.dart';
 import 'package:bath_random/model/user_data.dart';
+import 'package:bath_random/view/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginDataDao {
@@ -162,5 +165,23 @@ class LoginDataDao {
     await _userColloction.doc(userID).update({
       'myIcons': FieldValue.arrayUnion([index]),
     });
+  }
+
+  // 持っていないアイコンの要素番号をひとつ出力する
+  int randomIndex(List<int> myIcons) {
+    List<int> notMyIcons = [];
+    for (int i = 0; i < Constant.dressUp.length; i++) {
+      // もしmyIconsにiがなかったらnotmyiconsに追加
+      if (!myIcons.contains(i)) {
+        notMyIcons.add(i);
+      }
+    }
+    print('not my icons: $notMyIcons');
+    if (notMyIcons.isEmpty) {
+      print('notmyicons');
+      return -1;
+    }
+    var random = math.Random();
+    return notMyIcons[random.nextInt(notMyIcons.length)];
   }
 }
