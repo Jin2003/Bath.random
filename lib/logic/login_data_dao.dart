@@ -4,6 +4,7 @@ import 'package:bath_random/model/group_data.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class LoginDataDao {
   final CollectionReference _groupCollection =
@@ -40,11 +41,9 @@ class LoginDataDao {
 
   // グループIDからグループの情報を取得
   Future<GroupData> fetchGroupData(String groupID) async {
-    print('groupID: $groupID');
     var groupData = await _groupCollection.doc(groupID).get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
-        print('fetch data: $data');
         return GroupData(
           groupID: groupID,
           userCounts: data['userCounts'],
@@ -52,7 +51,11 @@ class LoginDataDao {
           groupStartTime: data['groupStartTime'],
         );
       },
-      onError: (error) => print('Error getting document: $error'),
+      onError: (error) {
+        if (kDebugMode) {
+          print('Error getting document: $error');
+        }
+      },
     );
     return groupData;
   }
@@ -67,7 +70,6 @@ class LoginDataDao {
         .then((QuerySnapshot snapshot) {
       List<DocumentSnapshot> docs = snapshot.docs;
       for (var data in docs) {
-        print(data);
         list.add(UserData(
           groupID: groupID,
           userID: data['userID'],
@@ -157,7 +159,6 @@ class LoginDataDao {
     await _userColloction.doc(userID).update({
       'currentIcon': index,
     });
-    print('currentIcon 変更 : to $index');
   }
 
   // index番目の画像をmyIconsに追加する
@@ -176,9 +177,10 @@ class LoginDataDao {
         notMyIcons.add(i);
       }
     }
-    print('not my icons: $notMyIcons');
+    if (kDebugMode) {
+      print('not my icons: $notMyIcons');
+    }
     if (notMyIcons.isEmpty) {
-      print('notmyicons');
       return -1;
     }
     var random = math.Random();

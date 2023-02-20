@@ -3,13 +3,14 @@ import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../logic/navigate.dart';
 
 class DressUpPage extends StatefulWidget {
-  String userID;
-  DressUpPage({super.key, required this.userID});
+  final String userID;
+  const DressUpPage({super.key, required this.userID});
 
   @override
   State<DressUpPage> createState() => _DressUpPageState();
@@ -50,7 +51,9 @@ class _DressUpPageState extends State<DressUpPage> {
           }
 
           myUserData = snapshot.data!;
-          print('myUserData: $myUserData');
+          if (kDebugMode) {
+            print('myUserData: $myUserData');
+          }
 
           return SafeArea(
             child: Column(
@@ -108,7 +111,6 @@ class _DressUpPageState extends State<DressUpPage> {
     }
 
     if (myIcons.length == 1) {
-      print('no icons');
       return Column(
         children: const [
           SizedBox(height: 60),
@@ -199,12 +201,12 @@ class _DressUpPageState extends State<DressUpPage> {
                     width: 200,
                     height: 45,
                     onPressed: () async {
-                      print('$index 番目にへんこう');
                       await _loginDataDao.setCurrentIcon(widget.userID, index);
                       setState(() {
                         _fetchUserData =
                             _loginDataDao.fetchMyUserData(widget.userID);
                       });
+                      if (!mounted) return;
                       Navigator.pop(context);
                     },
                   ),

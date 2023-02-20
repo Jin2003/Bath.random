@@ -5,6 +5,7 @@ import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:bath_random/view/pages/main_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,7 +24,7 @@ class _GamePageState extends State<GamePage> {
 
   String? userID;
   UserData? myData;
-  var index;
+  late int index;
   List<String> backCards = [
     'cards_hazure',
     'cards_hazure',
@@ -45,7 +46,7 @@ class _GamePageState extends State<GamePage> {
   void delayDialog(bool isSucceed) {
     if (!isSucceed) {
       Future.delayed(
-        Duration(milliseconds: 500),
+        const Duration(milliseconds: 500),
         () {
           showDialog(
             context: context,
@@ -60,7 +61,7 @@ class _GamePageState extends State<GamePage> {
     } else {
       if (index == -1) {
         Future.delayed(
-          Duration(milliseconds: 500),
+          const Duration(milliseconds: 500),
           () {
             showDialog(
               context: context,
@@ -74,7 +75,7 @@ class _GamePageState extends State<GamePage> {
         );
       } else {
         Future.delayed(
-          Duration(milliseconds: 500),
+          const Duration(milliseconds: 500),
           () {
             showDialog(
               context: context,
@@ -158,7 +159,9 @@ class _GamePageState extends State<GamePage> {
               }
 
               myData = snapshot.data!;
-              print('myData : $myData');
+              if (kDebugMode) {
+                print('myData : $myData');
+              }
               index = _loginDataDao.randomIndex(myData!.myIcons);
 
               if (index != -1) {
@@ -217,8 +220,6 @@ class _GamePageState extends State<GamePage> {
 
                   // あたりがでたらshowDialog
                   if (imageTitle[index] == 'cards_atari') {
-                    // TODO: ランダムで一つアイコンゲット
-                    // _loginDataDao.
                     delayDialog(true);
                   } else {
                     delayDialog(false);

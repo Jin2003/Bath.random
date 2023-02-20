@@ -5,12 +5,10 @@ import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/model/group_data.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
-import 'package:bath_random/view/pages/dress_up_page.dart';
-import 'package:bath_random/view/pages/start_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'game_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -30,8 +28,6 @@ class _MainPageState extends State<MainPage> {
 
   // 全員の順番をシャッフルする処理
   Future shuffleOrder() async {
-    print('いまからシャッフル: $userDataList');
-
     userDataList!.shuffle();
 
     _loginDataDao.shuffleData(userDataList!);
@@ -91,8 +87,10 @@ class _MainPageState extends State<MainPage> {
             Map<String, String?> id = snapshot.data!;
             groupID = id['groupID']!;
             userID = id['userID']!;
-            print('groupID get: $groupID');
-            print('userID get: $userID');
+            if (kDebugMode) {
+              print('groupID get: $groupID');
+              print('userID get: $userID');
+            }
 
             // GroupDataを取ってくる -> 整列、時間表示の有無
             return StreamBuilder(
@@ -105,7 +103,9 @@ class _MainPageState extends State<MainPage> {
                   return const CircularProgressIndicator();
                 }
                 GroupData groupData = snapshot.data!;
-                print('groupData: $groupData');
+                if (kDebugMode) {
+                  print('groupData: $groupData');
+                }
 
                 return _listWidget(context, groupData);
               },
@@ -134,7 +134,9 @@ class _MainPageState extends State<MainPage> {
         userDataList!.sort(
           (a, b) => a.order.compareTo(b.order),
         );
-        print(userDataList);
+        if (kDebugMode) {
+          print(userDataList);
+        }
 
         return Stack(
           children: [
