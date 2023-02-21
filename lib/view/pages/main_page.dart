@@ -7,7 +7,6 @@ import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
@@ -49,21 +48,6 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       key: _scaffoldKey,
       backgroundColor: Constant.lightBlueColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
-        child: AppBar(
-          title: Text(
-            'Bath.random();',
-            style: GoogleFonts.mPlusRounded1c(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-      ),
 
       // IDの取得処理完了後、リスト表示に移行
       body: FutureBuilder(
@@ -106,7 +90,6 @@ class _MainPageState extends State<MainPage> {
                 if (kDebugMode) {
                   print('groupData: $groupData');
                 }
-
                 return _listWidget(context, groupData);
               },
             );
@@ -140,70 +123,64 @@ class _MainPageState extends State<MainPage> {
 
         return Stack(
           children: [
-            Container(
-              child: Image.asset('assets/parts/appbar.png'),
-            ),
+            // Image.asset('assets/parts/appbar.png'),
             Container(
               alignment: Alignment.bottomCenter,
               child: Image.asset('assets/parts/bottom_navigation_bar.png'),
             ),
-            // リスト部分
-            Padding(
-              padding: const EdgeInsets.only(top: 45),
-              child: ListView.builder(
-                itemCount: userDataList!.length,
-                itemBuilder: (context, index) {
-                  Widget? bathTimeWidget;
-                  // アイコンの設定
-                  String currentIcon =
-                      Constant.dressUp[userDataList![index].currentIcon];
 
-                  if (groupData.isSetOrder) {
-                    if (index == 0) {
-                      passTime = groupData.groupStartTime!.toDate();
-                    }
-                    var startTime = passTime
-                        .add(const Duration(minutes: Constant.intervalTime));
-                    var endTime = startTime
-                        .add(Duration(minutes: userDataList![index].bathTime));
-                    // TODO: 自分のはいる時間をfirestoreに登録
-                    _loginDataDao.setMyStartTime(
-                        userDataList![index].userID, startTime);
-                    passTime = endTime;
-                    bathTimeWidget = Text(
-                        DateFormat('HH:mm - ').format(startTime) +
-                            DateFormat('HH:mm').format(endTime));
+            //リスト部分
+            ListView.builder(
+              itemCount: userDataList!.length,
+              itemBuilder: (context, index) {
+                Widget? bathTimeWidget;
+                // アイコンの設定
+                String currentIcon =
+                    Constant.dressUp[userDataList![index].currentIcon];
+                if (groupData.isSetOrder) {
+                  if (index == 0) {
+                    passTime = groupData.groupStartTime!.toDate();
                   }
-
-                  return SizedBox(
-                    height: 100,
-                    child: Card(
-                      color: Colors.white, // Card自体の色
-                      margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
-                      elevation: 10,
-                      shadowColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListTile(
-                        // leading: const Icon(
-                        //   Icons.face,
-                        //   size: 26,
-                        // ),
-                        leading: Image.asset(
-                            'assets/DressUp_images/d_white/$currentIcon.png'),
-                        title: Text(
-                          userDataList![index].userName,
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w400, fontSize: 17),
-                        ),
-                        trailing: Text("${userDataList![index].bathTime}min"),
-                        subtitle: bathTimeWidget,
-                      ),
+                  var startTime = passTime
+                      .add(const Duration(minutes: Constant.intervalTime));
+                  var endTime = startTime
+                      .add(Duration(minutes: userDataList![index].bathTime));
+                  // TODO: 自分のはいる時間をfirestoreに登録
+                  _loginDataDao.setMyStartTime(
+                      userDataList![index].userID, startTime);
+                  passTime = endTime;
+                  bathTimeWidget = Text(
+                      DateFormat('HH:mm - ').format(startTime) +
+                          DateFormat('HH:mm').format(endTime));
+                }
+                return SizedBox(
+                  height: 100,
+                  child: Card(
+                    color: Colors.white, // Card自体の色
+                    margin: const EdgeInsets.fromLTRB(40, 20, 40, 10),
+                    elevation: 10,
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  );
-                },
-              ),
+                    child: ListTile(
+                      // leading: const Icon(
+                      //   Icons.face,
+                      //   size: 26,
+                      // ),
+                      leading: Image.asset(
+                          'assets/DressUp_images/d_white/$currentIcon.png'),
+                      title: Text(
+                        userDataList![index].userName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 17),
+                      ),
+                      trailing: Text("${userDataList![index].bathTime}min"),
+                      subtitle: bathTimeWidget,
+                    ),
+                  ),
+                );
+              },
             ),
             // ボタン部分
             Align(

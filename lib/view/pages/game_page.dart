@@ -7,7 +7,6 @@ import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key});
@@ -114,18 +113,6 @@ class _GamePageState extends State<GamePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60.0),
-        child: AppBar(
-          title: Text(
-            'Bath.random();',
-            style: GoogleFonts.mPlusRounded1c(fontWeight: FontWeight.bold),
-          ),
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
-          elevation: 0,
-        ),
-      ),
       body: FutureBuilder(
         future: _sharedPreferencesLogic.fetchID(),
         builder: (context, snapshot) {
@@ -170,9 +157,9 @@ class _GamePageState extends State<GamePage> {
 
               return Stack(
                 children: [
-                  Image.asset('assets/parts/appbar.png'),
+                  //Image.asset('assets/parts/appbar.png'),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.only(bottom: 5),
                     child: Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
