@@ -49,32 +49,41 @@ class _DressUpPageState extends State<DressUpPage> {
             print('myUserData: $myUserData');
           }
 
-          return Align(
-            alignment: const Alignment(0.0, -1.0),
-            child: Container(
-              width: 350,
-              height: 530,
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _currentIconWidget(context),
-                  const CustomText(text: 'コレクション', fontSize: 20),
-                  const SizedBox(height: 5),
-                  LimitedBox(
-                    maxHeight: 300,
-                    child: _myIconsWidget(context),
+          return Stack(
+            children: [
+              Align(
+                alignment: const Alignment(0.0, -1.0),
+                child: Container(
+                  width: 350,
+                  height: 530,
+                  color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _currentIconWidget(context),
+                      const CustomText(text: 'コレクション', fontSize: 20),
+                      const SizedBox(height: 5),
+                      LimitedBox(
+                        maxHeight: 300,
+                        child: _myIconsWidget(context),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
-            ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset('assets/parts/bottom_navigation_bar.png'),
+              ),
+            ],
           );
         },
       ),
     );
   }
 
+//
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
     return _dackImage(context, myUserData!.currentIcon, 130);
@@ -169,19 +178,25 @@ class _DressUpPageState extends State<DressUpPage> {
       context: context,
       builder: (context) {
         return SimpleDialog(
-          title: const CustomText(text: 'このアイコンにしますか？', fontSize: 20),
           children: [
+            const SizedBox(
+              height: 10,
+            ),
+            const Align(
+              alignment: Alignment.center,
+              child: CustomText(text: 'このアイコンにしますか？', fontSize: 20),
+            ),
             Image.asset(
               'assets/DressUp_images/d_white/${Constant.dressUp[index]}.png',
               height: 200,
             ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(10.0),
               child: Column(
                 children: [
                   CustomButton(
                     title: 'はい',
-                    width: 200,
+                    width: 170,
                     height: 45,
                     onPressed: () async {
                       await _loginDataDao.setCurrentIcon(widget.userID, index);
@@ -196,7 +211,7 @@ class _DressUpPageState extends State<DressUpPage> {
                   const SizedBox(height: 10),
                   CustomButton(
                     title: 'いいえ',
-                    width: 200,
+                    width: 170,
                     height: 45,
                     onPressed: () => Navigator.pop(context),
                   ),

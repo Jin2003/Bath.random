@@ -155,22 +155,20 @@ class _GamePageState extends State<GamePage> {
           return Stack(
             children: [
               //Image.asset('assets/parts/appbar.png'),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 5),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        children: [
-                          for (int i = 0; i < 6; i++) _cardWidget(context, i),
-                        ],
-                      ),
-                    ],
-                  ),
+              Align(
+                alignment: const Alignment(0.0, -1.0),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 30),
+                    const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
+                    const SizedBox(height: 10),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        for (int i = 0; i < 6; i++) _cardWidget(context, i),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               Container(
