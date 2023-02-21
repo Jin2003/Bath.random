@@ -63,10 +63,6 @@ class _NavigateState extends State<Navigate> {
       ),
       body: Stack(
         children: [
-          Container(
-            alignment: Alignment.bottomCenter,
-            child: Image.asset('assets/parts/bottom_navigation_bar.png'),
-          ),
           FutureBuilder<Map<String, String?>>(
               future: _sharedPreferencesLogic.fetchID(),
               builder: (context, snapshot) {
