@@ -1,3 +1,4 @@
+import 'package:bath_random/logic/navigate.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
@@ -88,7 +89,7 @@ class _WaitPageState extends State<WaitPage> {
               title: "すすむ",
               width: 120,
               height: 45,
-              nextPage: MainPage(),
+              nextPage: Navigate(),
             ),
           ];
         } else if (userCounts! > docs.length) {

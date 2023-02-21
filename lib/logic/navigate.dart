@@ -1,5 +1,8 @@
+import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/view/pages/dress_up_page.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/main_list_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../view/pages/game_page.dart';
@@ -13,17 +16,23 @@ class Navigate extends StatefulWidget {
 }
 
 class _NavigateState extends State<Navigate> {
+  late SharedPreferencesLogic _sharedPreferencesLogic;
+  String groupID = '';
+  String userID = '';
+  List<StatefulWidget> _selectPage = [];
   // 自分が見ているページ
-  int _selectedIndex = 1;
+  var _selectedIndex = 1;
 
-  static const _selectPage = [
-    GamePage(),
-    MainPage(),
-    MainListPage(),
-  ];
+  @override
+  void initState() {
+    _sharedPreferencesLogic = SharedPreferencesLogic();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('widget created');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(110.0),
@@ -56,7 +65,34 @@ class _NavigateState extends State<Navigate> {
             alignment: Alignment.bottomCenter,
             child: Image.asset('assets/parts/bottom_navigation_bar.png'),
           ),
-          _selectPage[_selectedIndex],
+          FutureBuilder<Map<String, String?>>(
+              future: _sharedPreferencesLogic.fetchID(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text(snapshot.error.toString()));
+                }
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                var id = snapshot.data!;
+                groupID = id['groupID']!;
+                userID = id['userID']!;
+
+                if (kDebugMode) {
+                  print('get groupID: $groupID');
+                  print('get userID: $userID');
+                }
+                _selectPage = [
+                  GamePage(),
+                  MainPage(groupID: groupID, userID: userID),
+                  DressUpPage(groupID: groupID, userID: userID),
+                ];
+                return _selectPage[_selectedIndex];
+              }),
         ],
       ),
       bottomNavigationBar: NavigationBar(

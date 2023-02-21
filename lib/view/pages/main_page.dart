@@ -10,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
-  const MainPage({super.key});
+  String groupID;
+  String userID;
+  MainPage({super.key, required this.groupID, required this.userID});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -20,8 +22,8 @@ class _MainPageState extends State<MainPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LoginDataDao _loginDataDao;
   late SharedPreferencesLogic _sharedPreferencesLogic;
-  String userID = "";
-  String groupID = "";
+  String groupID = '';
+  String userID = '';
   DateTime? groupStartTime;
   List<UserData>? userDataList;
 
@@ -37,6 +39,8 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     _loginDataDao = LoginDataDao();
     _sharedPreferencesLogic = SharedPreferencesLogic();
+    groupID = widget.groupID;
+    userID = widget.userID;
     super.initState();
   }
 
@@ -50,50 +54,21 @@ class _MainPageState extends State<MainPage> {
       backgroundColor: Constant.lightBlueColor,
 
       // IDの取得処理完了後、リスト表示に移行
-      body: FutureBuilder(
-        future: _sharedPreferencesLogic.fetchID(),
+      body: StreamBuilder(
+        stream: _loginDataDao.streamGroupData(groupID),
         builder: (context, snapshot) {
-          // 通信中
-          if (snapshot.connectionState != ConnectionState.done) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData) {
             return const CircularProgressIndicator();
           }
-          // エラー発生時
-          if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+          GroupData groupData = snapshot.data!;
+          if (kDebugMode) {
+            print('groupData: $groupData');
           }
-          // データ取得失敗
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            // ID取得処理成功
-            Map<String, String?> id = snapshot.data!;
-            groupID = id['groupID']!;
-            userID = id['userID']!;
-            if (kDebugMode) {
-              print('groupID get: $groupID');
-              print('userID get: $userID');
-            }
 
-            // GroupDataを取ってくる -> 整列、時間表示の有無
-            return StreamBuilder(
-              stream: _loginDataDao.streamGroupData(groupID),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData) {
-                  return const CircularProgressIndicator();
-                }
-                GroupData groupData = snapshot.data!;
-                if (kDebugMode) {
-                  print('groupData: $groupData');
-                }
-                return _listWidget(context, groupData);
-              },
-            );
-          }
+          return _listWidget(context, groupData);
         },
       ),
     );
