@@ -6,8 +6,6 @@ import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../logic/navigate.dart';
-
 class DressUpPage extends StatefulWidget {
   final String groupID;
   final String userID;
@@ -31,21 +29,17 @@ class _DressUpPageState extends State<DressUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.userID);
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
         future: _loginDataDao.fetchMyUserData(widget.userID),
         builder: (context, snapshot) {
-          // 通信中
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
-          // エラー発生時
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           }
-          // データ取得失敗
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -64,9 +58,7 @@ class _DressUpPageState extends State<DressUpPage> {
                 child: Column(
                   //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     _currentIconWidget(context),
                     const SizedBox(height: 13),
                     const CustomText(text: 'コレクション', fontSize: 20),

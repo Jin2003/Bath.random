@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bath_random/logic/login_data_dao.dart';
-import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/model/group_data.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
@@ -10,9 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
-  String groupID;
-  String userID;
-  MainPage({super.key, required this.groupID, required this.userID});
+  final String groupID;
+  final String userID;
+  const MainPage({super.key, required this.groupID, required this.userID});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -21,7 +20,6 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late LoginDataDao _loginDataDao;
-  late SharedPreferencesLogic _sharedPreferencesLogic;
   String groupID = '';
   String userID = '';
   DateTime? groupStartTime;
@@ -38,7 +36,6 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     _loginDataDao = LoginDataDao();
-    _sharedPreferencesLogic = SharedPreferencesLogic();
     groupID = widget.groupID;
     userID = widget.userID;
     super.initState();

@@ -1,7 +1,8 @@
+import 'package:bath_random/logic/login_data_dao.dart';
 import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/view/pages/dress_up_page.dart';
 import 'package:bath_random/view/constant.dart';
-import 'package:bath_random/view/pages/main_list_page.dart';
+import 'package:bath_random/view/pages/start_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -17,6 +18,7 @@ class Navigate extends StatefulWidget {
 
 class _NavigateState extends State<Navigate> {
   late SharedPreferencesLogic _sharedPreferencesLogic;
+  late LoginDataDao _loginDataDao;
   String groupID = '';
   String userID = '';
   List<StatefulWidget> _selectPage = [];
@@ -26,7 +28,7 @@ class _NavigateState extends State<Navigate> {
   @override
   void initState() {
     _sharedPreferencesLogic = SharedPreferencesLogic();
-
+    _loginDataDao = LoginDataDao();
     super.initState();
   }
 
@@ -34,11 +36,12 @@ class _NavigateState extends State<Navigate> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    print('widget created');
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(size.width * 0.27),
         child: AppBar(
+          automaticallyImplyLeading: false,
+
           title: Text(
             'Bath.random();',
             style: GoogleFonts.mPlusRounded1c(
@@ -55,6 +58,19 @@ class _NavigateState extends State<Navigate> {
           ),
           elevation: 0,
           backgroundColor: Constant.lightBlueColor,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.dehaze_rounded),
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return _bottomSheetWidget(context);
+                  },
+                );
+              },
+            ),
+          ],
 
           // centerTitle: true,
           // automaticallyImplyLeading: false,
@@ -115,9 +131,87 @@ class _NavigateState extends State<Navigate> {
               icon: Icon(Icons.sports_esports), label: 'game'),
           NavigationDestination(icon: Icon(Icons.home), label: 'home'),
           NavigationDestination(
-              icon: Icon(Icons.format_list_bulleted), label: 'otther'),
+              icon: Icon(Icons.format_list_bulleted), label: 'other'),
         ],
       ),
     );
+  }
+
+  // ハンバーガーメニューの中
+  Widget _bottomSheetWidget(BuildContext context) {
+    return Container(
+        height: 400,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.settings, size: 36),
+                title: const Text('設定'),
+                onTap: () => null,
+              ),
+              ListTile(
+                leading: const Icon(Icons.manage_accounts, size: 36),
+                title: const Text('デモ用メニュー'),
+                onTap: () => showModalBottomSheet(
+                  context: context,
+                  builder: (context) => _demoWidget(context),
+                ),
+              ),
+            ],
+          ),
+        ));
+  }
+
+  // デモ用メニュー
+  Widget _demoWidget(BuildContext context) {
+    return Container(
+        height: 400,
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: ListView(
+            children: [
+              ListTile(
+                  leading: const Icon(Icons.toggle_on_outlined),
+                  title: const Text('スタートボタンを有効にする'),
+                  onTap: () {
+                    Future(() async {
+                      await _loginDataDao.enableStart(groupID);
+                    });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StartPage(),
+                      ),
+                    );
+                  }),
+              ListTile(
+                leading: const Icon(Icons.switch_account, size: 36),
+                title: const Text('デモ用メニューに移動する'),
+                onTap: () {
+                  _sharedPreferencesLogic.moveDemo();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const StartPage(),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                  leading: const Icon(Icons.face, size: 36),
+                  title: const Text('新しくグループを作成する'),
+                  onTap: () {
+                    _sharedPreferencesLogic.deleteID();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const StartPage(),
+                      ),
+                    );
+                  }),
+            ],
+          ),
+        ));
   }
 }

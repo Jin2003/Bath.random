@@ -1,6 +1,5 @@
 import 'package:bath_random/logic/login_data_dao.dart';
 import 'package:bath_random/logic/navigate.dart';
-import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
@@ -9,9 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
-  String groupID;
-  String userID;
-  GamePage({super.key, required this.groupID, required this.userID});
+  final String groupID;
+  final String userID;
+  const GamePage({super.key, required this.groupID, required this.userID});
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -19,7 +18,6 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late LoginDataDao _loginDataDao;
-  late SharedPreferencesLogic _sharedPreferencesLogic;
   int imageIndex = 0;
   bool isPressed = false;
 
@@ -59,6 +57,9 @@ class _GamePageState extends State<GamePage> {
               );
             },
           );
+          setState(() {
+            isPressed = true;
+          });
         },
       );
     } else {
@@ -76,6 +77,9 @@ class _GamePageState extends State<GamePage> {
                 );
               },
             );
+            setState(() {
+              isPressed = true;
+            });
           },
         );
       } else {
@@ -106,6 +110,9 @@ class _GamePageState extends State<GamePage> {
                 );
               },
             );
+            setState(() {
+              isPressed = true;
+            });
           },
         );
       }
@@ -115,7 +122,6 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     _loginDataDao = LoginDataDao();
-    _sharedPreferencesLogic = SharedPreferencesLogic();
     groupID = widget.groupID;
     userID = widget.userID;
     super.initState();
@@ -189,7 +195,6 @@ class _GamePageState extends State<GamePage> {
 
                 imageIndex = index;
                 imageTitle[index] = backCards[index];
-                isPressed = true;
 
                 // 結果をダイアログで出力
                 delayDialog(imageTitle[index] == 'cards_atari');
