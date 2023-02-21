@@ -75,21 +75,6 @@ class _MainListPageState extends State<MainListPage> {
                 onTap: () => null,
               ),
               ListTile(
-                leading: Image.asset(
-                  'assets/DressUp_images/d_white/normal.png',
-                  height: 36,
-                ),
-                title: const Text('きせかえ'),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DressUpPage(userID: userID),
-                    ),
-                  );
-                },
-              ),
-              ListTile(
                 leading: const Icon(Icons.manage_accounts, size: 36),
                 title: const Text('デモ用メニュー'),
                 onTap: () => showModalBottomSheet(

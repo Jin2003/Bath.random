@@ -1,4 +1,7 @@
+import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/view/pages/dress_up_page.dart';
 import 'package:bath_random/view/pages/main_list_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../view/pages/game_page.dart';
 import '../view/pages/main_page.dart';
@@ -11,17 +14,24 @@ class Navigate extends StatefulWidget {
 }
 
 class _NavigateState extends State<Navigate> {
+  late SharedPreferencesLogic _sharedPreferencesLogic;
+  String groupID = '';
+  String userID = '';
+  List<StatefulWidget> _selectPage = [];
   // 自分が見ているページ
   var _selectedIndex = 1;
 
-  static const _selectPage = [
-    GamePage(),
-    MainPage(),
-    MainListPage(),
-  ];
+  @override
+  void initState() {
+    _sharedPreferencesLogic = SharedPreferencesLogic();
+
+    super.initState();
+    print('init completed');
+  }
 
   @override
   Widget build(BuildContext context) {
+    print('widget created');
     return Scaffold(
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -43,7 +53,34 @@ class _NavigateState extends State<Navigate> {
               icon: Icon(Icons.format_list_bulleted), label: 'otther'),
         ],
       ),
-      body: _selectPage[_selectedIndex],
+      body: FutureBuilder<Map<String, String?>>(
+          future: _sharedPreferencesLogic.fetchID(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Center(child: Text(snapshot.error.toString()));
+            }
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            var id = snapshot.data!;
+            groupID = id['groupID']!;
+            userID = id['userID']!;
+
+            if (kDebugMode) {
+              print('get groupID: $groupID');
+              print('get userID: $userID');
+            }
+            _selectPage = [
+              GamePage(),
+              MainPage(groupID: groupID, userID: userID),
+              DressUpPage(groupID: groupID, userID: userID),
+            ];
+            return _selectPage[_selectedIndex];
+          }),
     );
   }
 }

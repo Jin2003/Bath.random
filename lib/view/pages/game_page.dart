@@ -1,4 +1,5 @@
 import 'package:bath_random/logic/login_data_dao.dart';
+import 'package:bath_random/logic/navigate.dart';
 import 'package:bath_random/logic/shared_preferences.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
@@ -91,7 +92,7 @@ class _GamePageState extends State<GamePage> {
                       title: 'メイン画面にもどる',
                       width: 200,
                       height: 45,
-                      nextPage: MainPage(),
+                      nextPage: Navigate(),
                     ),
                   ],
                 );

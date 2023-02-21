@@ -9,8 +9,9 @@ import 'package:flutter/material.dart';
 import '../../logic/navigate.dart';
 
 class DressUpPage extends StatefulWidget {
+  final String groupID;
   final String userID;
-  const DressUpPage({super.key, required this.userID});
+  const DressUpPage({super.key, required this.groupID, required this.userID});
 
   @override
   State<DressUpPage> createState() => _DressUpPageState();
@@ -24,16 +25,17 @@ class _DressUpPageState extends State<DressUpPage> {
   @override
   void initState() {
     _loginDataDao = LoginDataDao();
-    _fetchUserData = _loginDataDao.fetchMyUserData(widget.userID);
+    // _fetchUserData = _loginDataDao.fetchMyUserData(widget.userID);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.userID);
     return Scaffold(
       backgroundColor: Colors.white,
       body: FutureBuilder(
-        future: _fetchUserData,
+        future: _loginDataDao.fetchMyUserData(widget.userID),
         builder: (context, snapshot) {
           // 通信中
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -41,13 +43,11 @@ class _DressUpPageState extends State<DressUpPage> {
           }
           // エラー発生時
           if (snapshot.hasError) {
-            return Text(snapshot.error.toString());
+            return Center(child: Text(snapshot.error.toString()));
           }
           // データ取得失敗
           if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           myUserData = snapshot.data!;
