@@ -5,12 +5,13 @@ import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
-import 'package:bath_random/view/pages/main_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+  String groupID;
+  String userID;
+  GamePage({super.key, required this.groupID, required this.userID});
 
   @override
   State<GamePage> createState() => _GamePageState();
@@ -22,7 +23,8 @@ class _GamePageState extends State<GamePage> {
   int imageIndex = 0;
   bool isPressed = false;
 
-  String? userID;
+  String userID = '';
+  String groupID = '';
   UserData? myData;
   late int index;
   List<String> backCards = [
@@ -45,6 +47,7 @@ class _GamePageState extends State<GamePage> {
   // カードのあたりはずれのダイアログ
   void delayDialog(bool isSucceed) {
     if (!isSucceed) {
+      // はずれ
       Future.delayed(
         const Duration(milliseconds: 500),
         () {
@@ -59,7 +62,9 @@ class _GamePageState extends State<GamePage> {
         },
       );
     } else {
+      // あたり
       if (index == -1) {
+        // アイコンすべて所持
         Future.delayed(
           const Duration(milliseconds: 500),
           () {
@@ -74,6 +79,10 @@ class _GamePageState extends State<GamePage> {
           },
         );
       } else {
+        // アイコンゲット
+        print('index: $index');
+        _loginDataDao.addIcon(userID, index);
+
         Future.delayed(
           const Duration(milliseconds: 500),
           () {
@@ -84,7 +93,7 @@ class _GamePageState extends State<GamePage> {
                   title: const CustomText(text: 'アイコンをゲット', fontSize: 20),
                   children: [
                     Image.asset(
-                      'assets/DressUp_images/${Constant.dressUp[index]}.png',
+                      'assets/DressUp_images/d_white/${Constant.dressUp[index]}.png',
                       height: 200,
                     ),
                     const CustomButton(
@@ -107,6 +116,8 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     _loginDataDao = LoginDataDao();
     _sharedPreferencesLogic = SharedPreferencesLogic();
+    groupID = widget.groupID;
+    userID = widget.userID;
     super.initState();
   }
 
@@ -115,7 +126,7 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
-        future: _sharedPreferencesLogic.fetchID(),
+        future: _loginDataDao.fetchMyUserData(userID!),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const CircularProgressIndicator();
@@ -129,63 +140,38 @@ class _GamePageState extends State<GamePage> {
             );
           }
 
-          userID = snapshot.data!['userID'] as String;
+          myData = snapshot.data!;
+          if (kDebugMode) {
+            print('myData : $myData');
+          }
+          index = _loginDataDao.randomIndex(myData!.myIcons);
 
-          return FutureBuilder(
-            future: _loginDataDao.fetchMyUserData(userID!),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const CircularProgressIndicator();
-              }
-              if (snapshot.hasError) {
-                return Text(snapshot.error.toString());
-              }
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-
-              myData = snapshot.data!;
-              if (kDebugMode) {
-                print('myData : $myData');
-              }
-              index = _loginDataDao.randomIndex(myData!.myIcons);
-
-              if (index != -1) {
-                _loginDataDao.addIcon(userID!, index);
-              }
-
-              return Stack(
-                children: [
-                  //Image.asset('assets/parts/appbar.png'),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 5),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+          return Stack(
+            children: [
+              //Image.asset('assets/parts/appbar.png'),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        alignment: WrapAlignment.center,
                         children: [
-                          const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
-                          const SizedBox(height: 10),
-                          Wrap(
-                            alignment: WrapAlignment.center,
-                            children: [
-                              for (int i = 0; i < 6; i++)
-                                _cardWidget(context, i),
-                            ],
-                          ),
+                          for (int i = 0; i < 6; i++) _cardWidget(context, i),
                         ],
                       ),
-                    ),
+                    ],
                   ),
-                  Container(
-                    alignment: Alignment.bottomCenter,
-                    child:
-                        Image.asset('assets/parts/bottom_navigation_bar.png'),
-                  ),
-                ],
-              );
-            },
+                ),
+              ),
+              Container(
+                alignment: Alignment.bottomCenter,
+                child: Image.asset('assets/parts/bottom_navigation_bar.png'),
+              ),
+            ],
           );
         },
       ),
@@ -199,20 +185,14 @@ class _GamePageState extends State<GamePage> {
         onTap: isPressed
             ? null
             : () {
-                setState(() {
-                  backCards.shuffle();
+                backCards.shuffle();
 
-                  imageIndex = index;
-                  imageTitle[index] = backCards[index];
-                  isPressed = true;
+                imageIndex = index;
+                imageTitle[index] = backCards[index];
+                isPressed = true;
 
-                  // あたりがでたらshowDialog
-                  if (imageTitle[index] == 'cards_atari') {
-                    delayDialog(true);
-                  } else {
-                    delayDialog(false);
-                  }
-                });
+                // 結果をダイアログで出力
+                delayDialog(imageTitle[index] == 'cards_atari');
               },
         child: SizedBox(
           height: 145,

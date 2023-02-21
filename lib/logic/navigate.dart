@@ -49,7 +49,8 @@ class _NavigateState extends State<Navigate> {
             decoration: const BoxDecoration(
               image: DecorationImage(
                   image: AssetImage('assets/parts/appbar.png'),
-                  fit: BoxFit.cover),
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter),
             ),
           ),
           elevation: 0,
@@ -85,7 +86,7 @@ class _NavigateState extends State<Navigate> {
                   print('get userID: $userID');
                 }
                 _selectPage = [
-                  GamePage(),
+                  GamePage(groupID: groupID, userID: userID),
                   MainPage(groupID: groupID, userID: userID),
                   DressUpPage(groupID: groupID, userID: userID),
                 ];
