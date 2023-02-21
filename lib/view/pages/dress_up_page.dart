@@ -52,22 +52,22 @@ class _DressUpPageState extends State<DressUpPage> {
           return Stack(
             children: [
               Align(
-                alignment: const Alignment(0.0, -1.0),
+                alignment: const Alignment(0.0, -0.9),
                 child: Container(
                   width: 350,
-                  height: 530,
+                  height: 500,
                   color: Colors.white,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _currentIconWidget(context),
-                      const CustomText(text: 'コレクション', fontSize: 20),
-                      const SizedBox(height: 5),
+                      const SizedBox(height: 8),
+                      const CustomText(text: 'コレクション', fontSize: 18),
                       LimitedBox(
                         maxHeight: 300,
                         child: _myIconsWidget(context),
                       ),
-                      const SizedBox(height: 20),
+                      //const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -86,7 +86,7 @@ class _DressUpPageState extends State<DressUpPage> {
 //
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
-    return _dackImage(context, myUserData!.currentIcon, 130);
+    return _dackImage(context, myUserData!.currentIcon, 120);
   }
 
   // 自分の持っているアイコンだけのを表示
@@ -121,9 +121,9 @@ class _DressUpPageState extends State<DressUpPage> {
               // myIconsのみを表示（currentIcon以外）
               for (int i = 0; i < myIcons.length; i++)
                 if (myIcons[i] != myUserData!.currentIcon)
-                  _dackImage(context, myIcons[i], 90),
+                  _dackImage(context, myIcons[i], 85),
               for (int i = 0; i < notMyIcons.length; i++)
-                _secretImage(context, notMyIcons[i], 90),
+                _secretImage(context, notMyIcons[i], 85),
             ],
           ),
         ),

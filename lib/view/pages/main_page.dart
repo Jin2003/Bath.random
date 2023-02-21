@@ -6,6 +6,7 @@ import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 class MainPage extends StatefulWidget {
@@ -122,8 +123,13 @@ class _MainPageState extends State<MainPage> {
                       userDataList![index].userID, startTime);
                   passTime = endTime;
                   bathTimeWidget = Text(
-                      DateFormat('HH:mm - ').format(startTime) +
-                          DateFormat('HH:mm').format(endTime));
+                    DateFormat('HH:mm - ').format(startTime) +
+                        DateFormat('HH:mm').format(endTime),
+                    style: GoogleFonts.mPlusRounded1c(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w400,
+                        color: Constant.lightGreyColor),
+                  );
                 }
                 return SizedBox(
                   height: 100,
@@ -136,18 +142,22 @@ class _MainPageState extends State<MainPage> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: ListTile(
-                      // leading: const Icon(
-                      //   Icons.face,
-                      //   size: 26,
-                      // ),
                       leading: Image.asset(
                           'assets/DressUp_images/d_white/$currentIcon.png'),
                       title: Text(
                         userDataList![index].userName,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w400, fontSize: 17),
+                        style: GoogleFonts.mPlusRounded1c(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Constant.lightGreyColor),
                       ),
-                      trailing: Text("${userDataList![index].bathTime}min"),
+                      trailing: Text(
+                        "${userDataList![index].bathTime}min",
+                        style: GoogleFonts.mPlusRounded1c(
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400,
+                            color: Constant.lightGreyColor),
+                      ),
                       subtitle: bathTimeWidget,
                     ),
                   ),
