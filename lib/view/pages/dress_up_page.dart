@@ -33,7 +33,7 @@ class _DressUpPageState extends State<DressUpPage> {
   Widget build(BuildContext context) {
     print(widget.userID);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
         future: _loginDataDao.fetchMyUserData(widget.userID),
         builder: (context, snapshot) {
@@ -56,37 +56,28 @@ class _DressUpPageState extends State<DressUpPage> {
           }
 
           return SafeArea(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+            child: Center(
+              child: Container(
+                width: 350,
+                height: 550,
+                color: Colors.white,
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(width: 30),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Navigate(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.clear,
-                        size: 40,
-                      ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    _currentIconWidget(context),
+                    const SizedBox(height: 13),
+                    const CustomText(text: 'コレクション', fontSize: 20),
+                    const SizedBox(height: 5),
+                    LimitedBox(
+                      maxHeight: 350,
+                      child: _myIconsWidget(context),
                     ),
                   ],
                 ),
-                _currentIconWidget(context),
-                const SizedBox(height: 20),
-                const CustomText(text: 'コレクション', fontSize: 26),
-                const SizedBox(height: 20),
-                SizedBox(
-                  height: 420,
-                  child: _myIconsWidget(context),
-                ),
-              ],
+              ),
             ),
           );
         },
@@ -96,7 +87,7 @@ class _DressUpPageState extends State<DressUpPage> {
 
   // 設定中のアイコンの表示
   Widget _currentIconWidget(BuildContext context) {
-    return _dackImage(context, myUserData!.currentIcon, 160);
+    return _dackImage(context, myUserData!.currentIcon, 130);
   }
 
   // 自分の持っているアイコンだけのを表示
@@ -113,7 +104,7 @@ class _DressUpPageState extends State<DressUpPage> {
     if (myIcons.length == 1) {
       return Column(
         children: const [
-          SizedBox(height: 60),
+          SizedBox(height: 55),
           CustomText(
             text: 'きせかえをもっていません',
             fontSize: 24,
@@ -124,16 +115,18 @@ class _DressUpPageState extends State<DressUpPage> {
 
     return ListView(
       children: [
-        Wrap(
-          alignment: WrapAlignment.spaceAround,
-          children: [
-            // myIconsのみを表示（currentIcon以外）
-            for (int i = 0; i < myIcons.length; i++)
-              if (myIcons[i] != myUserData!.currentIcon)
-                _dackImage(context, myIcons[i], 100),
-            for (int i = 0; i < notMyIcons.length; i++)
-              _secretImage(context, notMyIcons[i], 100),
-          ],
+        Center(
+          child: Wrap(
+            alignment: WrapAlignment.spaceEvenly,
+            children: [
+              // myIconsのみを表示（currentIcon以外）
+              for (int i = 0; i < myIcons.length; i++)
+                if (myIcons[i] != myUserData!.currentIcon)
+                  _dackImage(context, myIcons[i], 90),
+              for (int i = 0; i < notMyIcons.length; i++)
+                _secretImage(context, notMyIcons[i], 90),
+            ],
+          ),
         ),
       ],
     );
@@ -142,7 +135,7 @@ class _DressUpPageState extends State<DressUpPage> {
   Widget _dackImage(BuildContext context, int index, double size) {
     var icon = Constant.dressUp[index];
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5),
       child: InkWell(
         onTap: () {
           _checkDialog(index);
@@ -164,7 +157,7 @@ class _DressUpPageState extends State<DressUpPage> {
   Widget _secretImage(BuildContext context, int index, double size) {
     var icon = Constant.dressUp[index];
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.all(5),
       child: InkWell(
         child: Container(
           height: size,
