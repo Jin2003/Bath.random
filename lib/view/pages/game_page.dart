@@ -132,7 +132,7 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
-        future: _loginDataDao.fetchMyUserData(userID!),
+        future: _loginDataDao.fetchMyUserData(userID),
         builder: (context, snapshot) {
           if (snapshot.connectionState != ConnectionState.done) {
             return const CircularProgressIndicator();
