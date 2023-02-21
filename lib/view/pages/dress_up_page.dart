@@ -49,26 +49,24 @@ class _DressUpPageState extends State<DressUpPage> {
             print('myUserData: $myUserData');
           }
 
-          return SafeArea(
-            child: Center(
-              child: Container(
-                width: 350,
-                height: 550,
-                color: Colors.white,
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 10),
-                    _currentIconWidget(context),
-                    const SizedBox(height: 13),
-                    const CustomText(text: 'コレクション', fontSize: 20),
-                    const SizedBox(height: 5),
-                    LimitedBox(
-                      maxHeight: 350,
-                      child: _myIconsWidget(context),
-                    ),
-                  ],
-                ),
+          return Align(
+            alignment: const Alignment(0.0, -1.0),
+            child: Container(
+              width: 350,
+              height: 530,
+              color: Colors.white,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _currentIconWidget(context),
+                  const CustomText(text: 'コレクション', fontSize: 20),
+                  const SizedBox(height: 5),
+                  LimitedBox(
+                    maxHeight: 300,
+                    child: _myIconsWidget(context),
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
           );
