@@ -32,10 +32,12 @@ class _NavigateState extends State<Navigate> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
     print('widget created');
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(110.0),
+        preferredSize: Size.fromHeight(size.width * 0.27),
         child: AppBar(
           title: Text(
             'Bath.random();',
