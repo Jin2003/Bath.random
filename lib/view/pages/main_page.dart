@@ -94,6 +94,9 @@ class _MainPageState extends State<MainPage> {
           print(userDataList);
         }
 
+        String btnImage =
+            groupData.isSetOrder ? 'sleeping_dack' : 'shuffle_button';
+
         return Stack(
           children: [
             // Image.asset('assets/parts/appbar.png'),
@@ -180,9 +183,9 @@ class _MainPageState extends State<MainPage> {
                   height: 110,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
-                    image: const DecorationImage(
+                    image: DecorationImage(
                       image: AssetImage(
-                        'assets/parts/shuffle_button.png',
+                        'assets/parts/$btnImage.png',
                       ),
                       fit: BoxFit.cover,
                     ),
