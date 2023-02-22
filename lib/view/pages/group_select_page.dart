@@ -1,4 +1,4 @@
-import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/logic/shared_preferences_logic.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/group_create_page.dart';
@@ -50,7 +50,7 @@ class GroupSelectPage extends StatelessWidget {
                       builder: (context) {
                         return Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: Container(
+                          child: SizedBox(
                             height: 80,
                             child: ListTile(
                                 leading: const Icon(Icons.toggle_on_outlined),

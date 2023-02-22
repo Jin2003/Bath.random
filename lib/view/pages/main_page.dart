@@ -118,7 +118,8 @@ class _MainPageState extends State<MainPage> {
                       .add(const Duration(minutes: Constant.intervalTime));
                   var endTime = startTime
                       .add(Duration(minutes: userDataList![index].bathTime));
-                  // TODO: 自分のはいる時間をfirestoreに登録
+
+                  // 自分のはいる時間をfirestoreに登録
                   _loginDataDao.setMyStartTime(
                       userDataList![index].userID, startTime);
                   passTime = endTime;

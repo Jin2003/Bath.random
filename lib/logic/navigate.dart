@@ -1,5 +1,5 @@
 import 'package:bath_random/logic/login_data_dao.dart';
-import 'package:bath_random/logic/shared_preferences.dart';
+import 'package:bath_random/logic/shared_preferences_logic.dart';
 import 'package:bath_random/view/pages/dress_up_page.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/start_page.dart';
@@ -135,7 +135,7 @@ class _NavigateState extends State<Navigate> {
 
   // ハンバーガーメニューの中
   Widget _bottomSheetWidget(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: 400,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -144,7 +144,7 @@ class _NavigateState extends State<Navigate> {
               ListTile(
                 leading: const Icon(Icons.settings, size: 36),
                 title: const Text('設定'),
-                onTap: () => null,
+                onTap: () {},
               ),
               ListTile(
                 leading: const Icon(Icons.manage_accounts, size: 36),
@@ -161,7 +161,7 @@ class _NavigateState extends State<Navigate> {
 
   // デモ用メニュー
   Widget _demoWidget(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: 400,
         child: Padding(
           padding: const EdgeInsets.all(20.0),

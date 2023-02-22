@@ -2,11 +2,9 @@ import 'package:bath_random/logic/navigate.dart';
 import 'package:bath_random/view/constant.dart';
 import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
-import 'package:bath_random/view/pages/main_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
 
 class WaitPage extends StatefulWidget {
   final String groupID;

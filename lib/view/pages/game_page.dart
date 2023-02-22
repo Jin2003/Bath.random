@@ -18,29 +18,22 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   late LoginDataDao _loginDataDao;
-  int imageIndex = 0;
-  bool isPressed = false;
-
   String userID = '';
   String groupID = '';
+  int imageIndex = 0;
+  bool isPressed = false;
   UserData? myData;
   late int index;
+
   List<String> backCards = [
-    'cards_hazure',
-    'cards_hazure',
-    'cards_hazure',
     'cards_atari',
     'cards_hazure',
     'cards_hazure',
+    'cards_hazure',
+    'cards_hazure',
+    'cards_hazure',
   ];
-  List<String> imageTitle = [
-    'cards_dack',
-    'cards_dack',
-    'cards_dack',
-    'cards_dack',
-    'cards_dack',
-    'cards_dack',
-  ];
+  List<String> imageTitle = List.filled(6, 'cards_dack');
 
   // カードのあたりはずれのダイアログ
   void delayDialog(bool isSucceed) {
@@ -57,9 +50,6 @@ class _GamePageState extends State<GamePage> {
               );
             },
           );
-          setState(() {
-            isPressed = true;
-          });
         },
       );
     } else {
@@ -77,14 +67,10 @@ class _GamePageState extends State<GamePage> {
                 );
               },
             );
-            setState(() {
-              isPressed = true;
-            });
           },
         );
       } else {
         // アイコンゲット
-        print('index: $index');
         _loginDataDao.addIcon(userID, index);
 
         Future.delayed(
@@ -110,9 +96,6 @@ class _GamePageState extends State<GamePage> {
                 );
               },
             );
-            setState(() {
-              isPressed = true;
-            });
           },
         );
       }
@@ -124,6 +107,7 @@ class _GamePageState extends State<GamePage> {
     _loginDataDao = LoginDataDao();
     groupID = widget.groupID;
     userID = widget.userID;
+
     super.initState();
   }
 
@@ -152,9 +136,29 @@ class _GamePageState extends State<GamePage> {
           }
           index = _loginDataDao.randomIndex(myData!.myIcons);
 
+          if (isPressed) {
+            // 結果をダイアログで出力
+            delayDialog(imageTitle[imageIndex] == 'cards_atari');
+          }
+
           return Stack(
             children: [
               //Image.asset('assets/parts/appbar.png'),
+              Align(
+                alignment: Alignment.topRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 8.0),
+                  child: IconButton(
+                    icon: Icon(Icons.refresh, color: Constant.greyColor),
+                    onPressed: () {
+                      setState(() {
+                        imageTitle = List.filled(6, 'cards_dack');
+                        isPressed = false;
+                      });
+                    },
+                  ),
+                ),
+              ),
               Align(
                 alignment: const Alignment(0.0, -1.0),
                 child: Column(
@@ -194,8 +198,9 @@ class _GamePageState extends State<GamePage> {
                 imageIndex = index;
                 imageTitle[index] = backCards[index];
 
-                // 結果をダイアログで出力
-                delayDialog(imageTitle[index] == 'cards_atari');
+                setState(() {
+                  isPressed = true;
+                });
               },
         child: SizedBox(
           height: 145,

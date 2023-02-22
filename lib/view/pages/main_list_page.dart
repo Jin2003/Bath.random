@@ -1,6 +1,5 @@
 import 'package:bath_random/logic/login_data_dao.dart';
-import 'package:bath_random/logic/shared_preferences.dart';
-import 'package:bath_random/view/pages/dress_up_page.dart';
+import 'package:bath_random/logic/shared_preferences_logic.dart';
 import 'package:bath_random/view/pages/start_page.dart';
 import 'package:flutter/material.dart';
 

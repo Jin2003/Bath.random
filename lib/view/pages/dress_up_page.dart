@@ -23,7 +23,7 @@ class _DressUpPageState extends State<DressUpPage> {
   @override
   void initState() {
     _loginDataDao = LoginDataDao();
-    // _fetchUserData = _loginDataDao.fetchMyUserData(widget.userID);
+    _fetchUserData = _loginDataDao.fetchMyUserData(widget.userID);
     super.initState();
   }
 
@@ -32,16 +32,16 @@ class _DressUpPageState extends State<DressUpPage> {
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
-        future: _loginDataDao.fetchMyUserData(widget.userID),
+        future: _fetchUserData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
             return Center(child: Text(snapshot.error.toString()));
           }
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: Text('NO DATA'));
           }
 
           myUserData = snapshot.data!;
@@ -100,17 +100,17 @@ class _DressUpPageState extends State<DressUpPage> {
       notMyIcons.remove(myUserData!.currentIcon);
     }
 
-    if (myIcons.length == 1) {
-      return Column(
-        children: const [
-          SizedBox(height: 55),
-          CustomText(
-            text: 'きせかえをもっていません',
-            fontSize: 24,
-          ),
-        ],
-      );
-    }
+    // if (myIcons.length == 1) {
+    //   return Column(
+    //     children: const [
+    //       SizedBox(height: 55),
+    //       CustomText(
+    //         text: 'きせかえをもっていません',
+    //         fontSize: 24,
+    //       ),
+    //     ],
+    //   );
+    // }
 
     return ListView(
       children: [
