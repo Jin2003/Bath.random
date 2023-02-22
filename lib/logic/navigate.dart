@@ -130,7 +130,10 @@ class _NavigateState extends State<Navigate> {
               icon: Icon(Icons.sports_esports), label: 'game'),
           NavigationDestination(icon: Icon(Icons.home), label: 'home'),
           NavigationDestination(
-              icon: Icon(Icons.format_list_bulleted), label: 'other'),
+              icon: ImageIcon(
+                AssetImage('assets/parts/dressUp_icon.png'),
+              ),
+              label: 'collection'),
         ],
       ),
     );

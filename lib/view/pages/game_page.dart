@@ -1,8 +1,6 @@
 import 'package:bath_random/logic/login_data_dao.dart';
-import 'package:bath_random/logic/navigate.dart';
 import 'package:bath_random/model/user_data.dart';
 import 'package:bath_random/view/constant.dart';
-import 'package:bath_random/view/pages/components/custom_button.dart';
 import 'package:bath_random/view/pages/components/custom_text.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
