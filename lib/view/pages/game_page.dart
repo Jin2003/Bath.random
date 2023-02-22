@@ -146,6 +146,7 @@ class _GamePageState extends State<GamePage> {
 
   @override
   Widget build(BuildContext context) {
+    final double deviceHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Constant.lightBlueColor,
       body: FutureBuilder(
@@ -192,22 +193,25 @@ class _GamePageState extends State<GamePage> {
                   ),
                 ),
               ),
-              Align(
-                alignment: const Alignment(0.0, -1.0),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
-                    const SizedBox(height: 10),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      children: [
-                        for (int i = 0; i < 6; i++) _cardWidget(context, i),
-                      ],
-                    ),
-                  ],
+              Center(
+                child: Container(
+                  height: deviceHeight * 0.63,
+                  child: Column(
+                    children: [
+                      //const SizedBox(height: 30),
+                      const CustomText(text: '好きなカードを選んでね！', fontSize: 16),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        children: [
+                          for (int i = 0; i < 6; i++) _cardWidget(context, i),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
+
               Container(
                 alignment: Alignment.bottomCenter,
                 child: Image.asset('assets/parts/bottom_navigation_bar.png'),
