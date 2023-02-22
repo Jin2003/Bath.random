@@ -45,8 +45,24 @@ class _GamePageState extends State<GamePage> {
           showDialog(
             context: context,
             builder: (context) {
-              return const SimpleDialog(
-                title: CustomText(text: 'はずれ', fontSize: 20),
+              return SimpleDialog(
+                //title: CustomText(text: 'はずれ', fontSize: 20),
+                children: [
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  const Align(
+                    alignment: Alignment.center,
+                    child: CustomText(text: 'はずれ', fontSize: 20),
+                  ),
+                  Image.asset(
+                    'assets/cards/hazure_dack.png',
+                    height: 200,
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                ],
               );
             },
           );
@@ -62,8 +78,24 @@ class _GamePageState extends State<GamePage> {
             showDialog(
               context: context,
               builder: (context) {
-                return const SimpleDialog(
-                  title: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
+                return SimpleDialog(
+                  //title: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
+                  children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: CustomText(text: 'アイコンコンプリート！', fontSize: 20),
+                    ),
+                    Image.asset(
+                      'assets/cards/compleate_dack.png',
+                      height: 200,
+                    ),
+                    const SizedBox(
+                      height: 15,
+                    ),
+                  ],
                 );
               },
             );
@@ -80,17 +112,20 @@ class _GamePageState extends State<GamePage> {
               context: context,
               builder: (context) {
                 return SimpleDialog(
-                  title: const CustomText(text: 'アイコンをゲット', fontSize: 20),
                   children: [
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    const Align(
+                      alignment: Alignment.center,
+                      child: CustomText(text: 'きせかえゲット！', fontSize: 20),
+                    ),
                     Image.asset(
                       'assets/DressUp_images/d_white/${Constant.dressUp[index]}.png',
                       height: 200,
                     ),
-                    const CustomButton(
-                      title: 'メイン画面にもどる',
-                      width: 200,
-                      height: 45,
-                      nextPage: Navigate(),
+                    const SizedBox(
+                      height: 15,
                     ),
                   ],
                 );
